@@ -118,7 +118,7 @@ export const productsApi = {
   /** Crear producto sin IA — imágenes como archivos físicos */
   createWithFiles: (dto: Omit<CreateProductDto, 'images'>, images: File[]) => {
     const form = new FormData();
-    form.append('data', JSON.stringify(dto));
+    form.append('data', new Blob([JSON.stringify(dto)], { type: 'application/json' }));
     images.forEach((file) => form.append('images', file));
     return apiRequestMultipart<Product>('/products/with-files', form);
   },
@@ -133,7 +133,7 @@ export const productsApi = {
   /** Crear producto con IA — imágenes como archivos físicos */
   createWithAIAndFiles: (dto: Omit<CreateProductWithAiDto, 'images'>, images: File[]) => {
     const form = new FormData();
-    form.append('data', JSON.stringify(dto));
+    form.append('data', new Blob([JSON.stringify(dto)], { type: 'application/json' }));
     images.forEach((file) => form.append('images', file));
     return apiRequestMultipart<Product>('/products/with-ai/with-files', form);
   },

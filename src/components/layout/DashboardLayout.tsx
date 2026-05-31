@@ -1,59 +1,155 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { AIProductsModule } from "@/components/ai-products/AIProductsModule";
+import { ProductsModule } from "@/components/products/ProductsModule";
+import { FormDraftProvider, useFormDraft } from "@/contexts/FormDraftContext";
+import { NavigationGuardDialog } from "./NavigationGuardDialog";
+import { Construction } from "lucide-react";
 
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-}
+// ─── Page metadata ────────────────────────────────────────────────────────────
 
 const pageTitles: Record<string, { title: string; subtitle: string }> = {
-  dashboard: { title: "Dashboard", subtitle: "Resumen general de tu negocio" },
-  products: { title: "Productos", subtitle: "Gestiona tu catálogo de productos" },
+  dashboard:     { title: "Dashboard",         subtitle: "Resumen general de tu negocio" },
+  products:      { title: "Productos",         subtitle: "Gestiona tu catálogo de productos" },
   "ai-products": { title: "IA para Productos", subtitle: "Optimiza tus productos con inteligencia artificial" },
-  marketplaces: { title: "Marketplaces", subtitle: "Conecta y sincroniza tus canales de venta" },
-  analytics: { title: "Analíticas", subtitle: "Métricas y reportes de rendimiento" },
-  settings: { title: "Configuración", subtitle: "Ajustes de tu cuenta y preferencias" },
+  marketplaces:  { title: "Marketplaces",      subtitle: "Conecta y sincroniza tus canales de venta" },
+  analytics:     { title: "Analíticas",        subtitle: "Métricas y reportes de rendimiento" },
+  settings:      { title: "Configuración",     subtitle: "Ajustes de tu cuenta y preferencias" },
 };
 
-export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [activeItem, setActiveItem] = useState("ai-products");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+const IMPLEMENTED = ["ai-products", "products"];
+
+// ─── Coming soon placeholder ──────────────────────────────────────────────────
+
+function ComingSoonSection({ section }: { section: string }) {
+  const info = pageTitles[section] ?? { title: section, subtitle: "" };
+  return (
+    <div className="flex flex-col items-center justify-center py-32 text-center">
+      <div className="w-20 h-20 rounded-2xl glass flex items-center justify-center mb-6 border border-border">
+        <Construction className="w-10 h-10 text-muted-foreground opacity-60" />
+      </div>
+      <h2 className="text-2xl font-bold mb-2">{info.title}</h2>
+      <p className="text-muted-foreground max-w-xs">
+        Esta sección está en construcción. ¡Pronto estará disponible!
+      </p>
+    </div>
+  );
+}
+
+// ─── Inner layout (needs access to FormDraftContext) ──────────────────────────
+
+function DashboardContent() {
+  const [activeItem, setActiveItem]         = useState("ai-products");
+  const [sidebarCollapsed]                  = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isMobile = useIsMobile();
+  const [guardOpen, setGuardOpen]           = useState(false);
+  const [pendingSection, setPendingSection] = useState<string | null>(null);
+  // Sections are lazy-mounted: added to this Set the first time they're visited
+  const [mounted, setMounted]               = useState<Set<string>>(new Set(["ai-products"]));
 
-  const pageInfo = pageTitles[activeItem] || { title: "Dashboard", subtitle: "" };
+  const isMobile       = useIsMobile();
+  const { checkDirty } = useFormDraft();
 
+  const pageInfo = pageTitles[activeItem] ?? { title: "Dashboard", subtitle: "" };
+
+  // ── Navigate to a section (always lazy-mounts it) ─────────────────────────
+  const navigateTo = useCallback((id: string) => {
+    setMounted((prev) => new Set([...prev, id]));
+    setActiveItem(id);
+    setMobileMenuOpen(false);
+  }, []);
+
+  // ── Sidebar click: check for unsaved changes first ────────────────────────
+  const handleSectionChange = useCallback(
+    (id: string) => {
+      if (id === activeItem) {
+        setMobileMenuOpen(false);
+        return;
+      }
+      if (checkDirty(activeItem)) {
+        setPendingSection(id);
+        setGuardOpen(true);
+        return;
+      }
+      navigateTo(id);
+    },
+    [activeItem, checkDirty, navigateTo]
+  );
+
+  const handleGuardLeave = () => {
+    setGuardOpen(false);
+    if (pendingSection) navigateTo(pendingSection);
+    setPendingSection(null);
+  };
+
+  const handleGuardStay = () => {
+    setGuardOpen(false);
+    setPendingSection(null);
+  };
+
+  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar 
-        activeItem={activeItem} 
-        onItemChange={(id) => {
-          setActiveItem(id);
-          setMobileMenuOpen(false);
-        }}
+      <Sidebar
+        activeItem={activeItem}
+        onItemChange={handleSectionChange}
         mobileOpen={mobileMenuOpen}
         onMobileClose={() => setMobileMenuOpen(false)}
       />
-      
+
       <main
         className={cn(
           "transition-all duration-300",
-          isMobile ? "ml-0" : (sidebarCollapsed ? "ml-20" : "ml-64")
+          isMobile ? "ml-0" : sidebarCollapsed ? "ml-20" : "ml-64"
         )}
       >
-        <Header 
-          title={pageInfo.title} 
+        <Header
+          title={pageInfo.title}
           subtitle={pageInfo.subtitle}
           onMenuClick={() => setMobileMenuOpen(true)}
           showMenuButton={isMobile}
         />
-        
+
         <div className="p-4 md:p-8">
-          {children}
+          {/*
+           * LAZY MOUNT STRATEGY
+           * Sections are mounted on first visit, then toggled with
+           * display:none — React state is preserved across navigation.
+           */}
+          <div style={{ display: activeItem === "ai-products" ? "block" : "none" }}>
+            {mounted.has("ai-products") && <AIProductsModule />}
+          </div>
+
+          <div style={{ display: activeItem === "products" ? "block" : "none" }}>
+            {mounted.has("products") && <ProductsModule />}
+          </div>
+
+          {/* Placeholder for sections not yet implemented */}
+          {!IMPLEMENTED.includes(activeItem) && (
+            <ComingSoonSection section={activeItem} />
+          )}
         </div>
       </main>
+
+      <NavigationGuardDialog
+        open={guardOpen}
+        sectionName={pageTitles[activeItem]?.title ?? activeItem}
+        onLeave={handleGuardLeave}
+        onStay={handleGuardStay}
+      />
     </div>
+  );
+}
+
+// ─── Public export ────────────────────────────────────────────────────────────
+
+export function DashboardLayout() {
+  return (
+    <FormDraftProvider>
+      <DashboardContent />
+    </FormDraftProvider>
   );
 }

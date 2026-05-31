@@ -122,7 +122,7 @@ export interface ForgotPasswordCredentials {
 
 export interface ResetPasswordCredentials {
   token: string;
-  password: string;
+  newPassword: string;
 }
 
 export interface User {
@@ -193,6 +193,18 @@ export const authApi = {
   getProfile: () =>
     apiRequest<User>('/auth/profile', {
       method: 'GET',
+    }),
+
+  updateProfile: (data: { name?: string; lastName?: string }) =>
+    apiRequest<User>('/auth/profile', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+
+  changePassword: (data: { currentPassword: string; newPassword: string }) =>
+    apiRequest<{ message: string }>('/auth/change-password', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
     }),
 };
 

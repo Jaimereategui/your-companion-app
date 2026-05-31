@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { MarketplaceSelector } from "./MarketplaceSelector";
@@ -8,42 +8,64 @@ import { GeneratedFieldsPreview } from "./GeneratedFieldsPreview";
 import { ExportActions } from "./ExportActions";
 import { Sparkles } from "lucide-react";
 import { productsApi } from "@/lib/products-api";
+import { bulkUploadApi } from "@/lib/bulk-upload-api";
 import { toast } from "sonner";
+import { useFormDraft } from "@/contexts/FormDraftContext";
 
 export function AIProductsModule() {
   const [selectedMarketplaces, setSelectedMarketplaces] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasGeneratedContent, setHasGeneratedContent] = useState(false);
+  const { setDirty } = useFormDraft();
 
-
-
+  // Report dirty state whenever the user configures anything
+  useEffect(() => {
+    const dirty = selectedMarketplaces.length > 0 || selectedCategory !== "";
+    setDirty("ai-products", dirty);
+  }, [selectedMarketplaces, selectedCategory, setDirty]);
   const handleSubmit = async (data: {
     mode: "single" | "bulk";
     content: string;
     sku: string;
     price?: number;
     images: File[];
+    bulkFile?: File;
   }) => {
     setIsProcessing(true);
     try {
-      const dto = {
-        sku: data.sku,
-        name: data.content,
-        description: data.content,
-        category: selectedCategory,
-        targetMarketplaces: selectedMarketplaces,
-        price: data.price,
-      };
-
-      const response = await productsApi.createWithAIAndFiles(dto, data.images);
-
-      if (response.error) {
-        toast.error(response.error);
+      if (data.mode === "bulk") {
+        // ── Carga masiva: envía el Excel al endpoint de bulk-upload ──
+        if (!data.bulkFile) {
+          toast.error("No se encontró el archivo Excel.");
+          return;
+        }
+        const response = await bulkUploadApi.uploadProducts(data.bulkFile);
+        if (response.error) {
+          toast.error(response.error);
+        } else {
+          toast.success(response.data?.message ?? "Productos encolados correctamente");
+          console.log("Bulk upload response:", response.data);
+        }
       } else {
-        setHasGeneratedContent(true);
-        toast.success("Contenido generado exitosamente");
-        console.log("Generated Content:", response.data);
+        // ── Producto individual: genera contenido con IA ──
+        const dto = {
+          sku: data.sku,
+          name: data.content,
+          description: data.content,
+          category: selectedCategory,
+          targetMarketplaces: selectedMarketplaces,
+          price: data.price,
+        };
+        const response = await productsApi.createWithAIAndFiles(dto, data.images);
+        if (response.error) {
+          toast.error(response.error);
+        } else {
+          setHasGeneratedContent(true);
+          setDirty("ai-products", false);
+          toast.success("Contenido generado exitosamente");
+          console.log("Generated Content:", response.data);
+        }
       }
     } catch (error) {
       toast.error("Error al conectar con el servidor");

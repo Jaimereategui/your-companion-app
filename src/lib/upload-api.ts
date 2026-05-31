@@ -9,6 +9,11 @@ export interface UploadedImage {
   publicId?: string;
 }
 
+export interface UploadImagesResponse {
+  message: string;
+  images: UploadedImage[];
+}
+
 // ─────────────────────────────────────────────
 // Upload API
 // ─────────────────────────────────────────────
@@ -32,6 +37,6 @@ export const uploadApi = {
   uploadImages: (files: File[]) => {
     const form = new FormData();
     files.forEach((file) => form.append('files', file));
-    return apiRequestMultipart<UploadedImage[]>('/upload/images', form);
+    return apiRequestMultipart<UploadImagesResponse>('/upload/images', form);
   },
 };

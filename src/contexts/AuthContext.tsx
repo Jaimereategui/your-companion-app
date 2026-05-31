@@ -10,6 +10,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   forgotPassword: (credentials: ForgotPasswordCredentials) => Promise<{ success: boolean; error?: string }>;
   resetPassword: (credentials: ResetPasswordCredentials) => Promise<{ success: boolean; error?: string }>;
+  updateProfile: (data: { name?: string; lastName?: string }) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -80,6 +81,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { success: true };
   };
 
+  const updateProfile = async (data: { name?: string; lastName?: string }) => {
+    const { data: updated, error } = await authApi.updateProfile(data);
+    if (error || !updated) return { success: false, error: error || 'Error al actualizar perfil' };
+    setUser(updated); // update local state immediately
+    return { success: true };
+  };
   return (
     <AuthContext.Provider
       value={{
@@ -91,6 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logout,
         forgotPassword,
         resetPassword,
+        updateProfile,
       }}
     >
       {children}

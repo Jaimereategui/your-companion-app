@@ -14,6 +14,7 @@ interface ProductInputFormProps {
     sku: string;
     price?: number;
     images: File[];
+    bulkFile?: File;
   }) => void;
   isProcessing: boolean;
 }
@@ -77,7 +78,7 @@ export function ProductInputForm({ onSubmit, isProcessing }: ProductInputFormPro
         images,
       });
     } else if (bulkFile) {
-      onSubmit({ mode: "bulk", content: bulkFile.name, sku: "", price: undefined, images: [] });
+      onSubmit({ mode: "bulk", content: bulkFile.name, sku: "", price: undefined, images: [], bulkFile });
     }
   };
 
