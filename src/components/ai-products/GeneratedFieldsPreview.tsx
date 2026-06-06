@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,11 +43,34 @@ const sampleFields: Field[] = [
 
 interface GeneratedFieldsPreviewProps {
   visible: boolean;
+  productData?: any;
 }
 
-export function GeneratedFieldsPreview({ visible }: GeneratedFieldsPreviewProps) {
+export function GeneratedFieldsPreview({ visible, productData }: GeneratedFieldsPreviewProps) {
   const [fields, setFields] = useState<Field[]>(sampleFields);
   const [editingField, setEditingField] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (productData) {
+      const newFields: Field[] = [];
+      newFields.push({ id: "title", label: "Título optimizado", value: productData.aiTitle || productData.name || "", required: true, type: "text", aiGenerated: !!productData.aiTitle, confidence: "high" });
+      newFields.push({ id: "description", label: "Descripción para marketplace", value: productData.aiDescription || productData.description || "", required: true, type: "textarea", aiGenerated: !!productData.aiDescription, confidence: "high" });
+      newFields.push({ id: "sku", label: "SKU", value: productData.sku || "", required: false, type: "text", aiGenerated: false, confidence: "low" });
+      
+      if (productData.aiKeywords) {
+         const keywords = Array.isArray(productData.aiKeywords) ? productData.aiKeywords.join(', ') : productData.aiKeywords;
+         newFields.push({ id: "keywords", label: "Palabras clave SEO", value: keywords, required: false, type: "text", aiGenerated: true, confidence: "high" });
+      }
+
+      if (productData.aiAttributes) {
+        Object.entries(productData.aiAttributes).forEach(([key, val]) => {
+          newFields.push({ id: `attr_${key}`, label: key, value: String(val), required: false, type: "text", aiGenerated: true, confidence: "high" });
+        });
+      }
+
+      setFields(newFields);
+    }
+  }, [productData]);
 
   if (!visible) return null;
 

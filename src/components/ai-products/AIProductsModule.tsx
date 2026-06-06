@@ -17,6 +17,7 @@ export function AIProductsModule() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasGeneratedContent, setHasGeneratedContent] = useState(false);
+  const [generatedProduct, setGeneratedProduct] = useState<any>(null);
   const { setDirty } = useFormDraft();
 
   // Report dirty state whenever the user configures anything
@@ -62,6 +63,7 @@ export function AIProductsModule() {
           toast.error(response.error);
         } else {
           setHasGeneratedContent(true);
+          setGeneratedProduct(response.data);
           setDirty("ai-products", false);
           toast.success("Contenido generado exitosamente");
           console.log("Generated Content:", response.data);
@@ -160,7 +162,7 @@ export function AIProductsModule() {
             </span>
             <span className="font-semibold text-sm md:text-base">Revisa los resultados</span>
           </div>
-          <GeneratedFieldsPreview visible={hasGeneratedContent} />
+          <GeneratedFieldsPreview visible={hasGeneratedContent} productData={generatedProduct} />
 
           <Separator className="my-6 md:my-8" />
 

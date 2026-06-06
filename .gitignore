@@ -25,3 +25,7 @@ dist-ssr
 
 #local documentation
 reporte_estructura.md
+
+# Environment variables
+.env
+.env.*
