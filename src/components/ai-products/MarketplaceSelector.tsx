@@ -37,12 +37,12 @@ export function MarketplaceSelector({ selected, onChange }: MarketplaceSelectorP
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h3 className="font-semibold text-base md:text-lg">Marketplaces destino</h3>
-          <p className="text-xs md:text-sm text-muted-foreground">
+          <h3 className="font-semibold text-base md:text-lg text-[#111111]">Marketplaces destino</h3>
+          <p className="text-xs md:text-sm text-[#666666]">
             Selecciona dónde quieres enviar los productos
           </p>
         </div>
-        <span className="text-xs md:text-sm text-muted-foreground">
+        <span className="text-xs md:text-sm text-[#666666] font-medium bg-[#F8F8F5] px-3 py-1 rounded-full border border-[#EAEAEA]">
           {selected.length} seleccionados
         </span>
       </div>
@@ -55,26 +55,26 @@ export function MarketplaceSelector({ selected, onChange }: MarketplaceSelectorP
               key={mp.id}
               onClick={() => toggleMarketplace(mp.id)}
               className={cn(
-                "relative flex flex-col items-center gap-1.5 md:gap-2 p-3 md:p-4 rounded-xl border-2 transition-all duration-200",
+                "relative flex flex-col items-center gap-1.5 md:gap-2 p-3 md:p-4 rounded-[16px] border transition-all duration-200",
                 isSelected
-                  ? "border-primary bg-primary/10"
-                  : "border-border bg-card hover:border-primary/50 hover:bg-secondary"
+                  ? "border-[#FCCB34] bg-[#FFF7D6] shadow-[0_4px_12px_rgba(252,203,52,0.15)]"
+                  : "border-[#EAEAEA] bg-white hover:border-[#FCCB34]/40 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] hover:-translate-y-0.5"
               )}
             >
               {isSelected && (
-                <div className="absolute top-1.5 right-1.5 md:top-2 md:right-2 w-4 h-4 md:w-5 md:h-5 rounded-full bg-primary flex items-center justify-center">
-                  <Check className="w-2.5 h-2.5 md:w-3 md:h-3 text-primary-foreground" />
+                <div className="absolute top-1.5 right-1.5 md:top-2 md:right-2 w-5 h-5 rounded-full bg-[#FCCB34] flex items-center justify-center shadow-sm">
+                  <Check className="w-3 h-3 text-[#111111] stroke-[3]" />
                 </div>
               )}
               <div
                 className={cn(
-                  "w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center text-xl md:text-2xl bg-gradient-to-br",
+                  "w-10 h-10 md:w-12 md:h-12 rounded-[12px] flex items-center justify-center text-xl md:text-2xl bg-gradient-to-br shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
                   mp.color
                 )}
               >
                 {mp.logo}
               </div>
-              <span className="text-xs md:text-sm font-medium text-center">{mp.name}</span>
+              <span className="text-xs md:text-sm font-semibold text-[#111111] text-center mt-1">{mp.name}</span>
             </button>
           );
         })}

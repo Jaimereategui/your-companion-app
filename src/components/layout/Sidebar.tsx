@@ -56,19 +56,19 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed left-0 top-0 h-screen glass-strong z-50 flex flex-col w-72 transition-transform duration-300",
+            "fixed left-0 top-0 h-screen bg-white border-r border-border z-50 flex flex-col w-72 transition-transform duration-300",
             mobileOpen ? "translate-x-0" : "-translate-x-full"
           )}
         >
           {/* Logo with close button */}
           <div className="flex items-center justify-between p-6 border-b border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center glow-primary">
-                <Store className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <div>
-                <h1 className="font-bold text-lg tracking-tight">SyncHub</h1>
-                <p className="text-xs text-muted-foreground">Marketplace Manager</p>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center font-bold text-2xl tracking-tight text-black">
+                <span>Synkr</span>
+                <span className="bg-white text-black w-7 h-7 rounded-full flex items-center justify-center mx-[2px] shadow-sm pb-[2px]">
+                  o
+                </span>
+                <span className="ml-1">AI</span>
               </div>
             </div>
             <Button variant="ghost" size="icon" onClick={onMobileClose}>
@@ -89,8 +89,8 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
                   className={cn(
                     "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative",
                     isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                      ? "bg-[#FFF1B8] text-[#111111] font-semibold"
+                      : "text-[#666666] hover:bg-[#F8F8F5] hover:text-[#111111]"
                   )}
                 >
                   <Icon
@@ -106,7 +106,7 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
                     </span>
                   )}
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-r-full bg-primary" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-r-full bg-[#FCCB34]" />
                   )}
                 </button>
               );
@@ -121,19 +121,25 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 h-screen glass-strong z-50 flex flex-col transition-all duration-300",
+        "fixed left-0 top-0 h-screen bg-white border-r border-border z-50 flex flex-col transition-all duration-300",
         collapsed ? "w-20" : "w-64"
       )}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 p-6 border-b border-border">
-        <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center glow-primary">
-          <Store className="w-5 h-5 text-primary-foreground" />
-        </div>
-        {!collapsed && (
-          <div>
-            <h1 className="font-bold text-lg tracking-tight">SyncHub</h1>
-            <p className="text-xs text-muted-foreground">Marketplace Manager</p>
+      <div className="flex items-center gap-3 p-6 border-b border-border h-20">
+        {!collapsed ? (
+          <div className="flex items-center font-bold text-2xl tracking-tight text-black">
+            <span>Synkr</span>
+            <span className="bg-white text-black w-7 h-7 rounded-full flex items-center justify-center mx-[2px] shadow-sm pb-[2px]">
+              o
+            </span>
+            <span className="ml-1">AI</span>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center w-full">
+            <span className="bg-white text-black w-8 h-8 font-bold text-lg rounded-full flex items-center justify-center shadow-sm">
+              S
+            </span>
           </div>
         )}
       </div>
@@ -151,8 +157,8 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative",
                 isActive
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  ? "bg-[#FFF1B8] text-[#111111] font-semibold"
+                  : "text-[#666666] hover:bg-[#F8F8F5] hover:text-[#111111]"
               )}
             >
               <Icon
@@ -172,7 +178,7 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
                 </>
               )}
               {isActive && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-r-full bg-primary" />
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-r-full bg-[#FCCB34]" />
               )}
             </button>
           );
