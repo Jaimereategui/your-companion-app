@@ -5,16 +5,17 @@ interface Marketplace {
   id: string;
   name: string;
   logo: string;
+  imgClass?: string;
 }
 
 const marketplaces: Marketplace[] = [
   { id: "mercadolibre", name: "MercadoLibre", logo: "/mercadolibre.png" },
-  { id: "amazon", name: "Amazon", logo: "/amazon.png" },
+  { id: "amazon", name: "Amazon", logo: "/amazon.png", imgClass: "scale-[1.7]" },
   { id: "shopify", name: "Shopify", logo: "/shopify.png" },
   { id: "woocommerce", name: "WooCommerce", logo: "/woocomerce.png" },
   { id: "falabella", name: "Falabella", logo: "/Falabella.png" },
   { id: "ripley", name: "Ripley", logo: "/Logo_Ripley_com.png" },
-  { id: "juntoz", name: "Juntoz", logo: "/juntoz.png" },
+  { id: "juntoz", name: "Juntoz", logo: "/juntoz.png", imgClass: "scale-[1.8]" },
   { id: "yape", name: "Yape", logo: "/yape-logo-fondo-transparente.png" },
 ];
 
@@ -66,7 +67,7 @@ export function MarketplaceSelector({ selected, onChange }: MarketplaceSelectorP
                 </div>
               )}
               <div className="w-full h-12 md:h-16 px-1 flex items-center justify-center mb-1.5 md:mb-2">
-                <img src={mp.logo} alt={mp.name} className="w-full h-full object-contain" />
+                <img src={mp.logo} alt={mp.name} className={cn("w-full h-full object-contain", mp.imgClass)} />
               </div>
               <span className="text-xs md:text-sm font-semibold text-[#111111] text-center leading-tight">{mp.name}</span>
             </button>
