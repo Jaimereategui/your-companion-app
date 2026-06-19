@@ -48,9 +48,9 @@ export default function Login() {
         <div className="w-full md:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col justify-center bg-white z-10">
           
           <div className="mb-10 text-center md:text-left">
-            {/* Logo placeholder */}
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#111111] text-[#FCCB34] mb-6 shadow-md">
-              <span className="font-bold text-xl">S</span>
+            {/* Logo */}
+            <div className="mb-6">
+              <img src="/logo.svg" alt="Synkro AI Logo" className="h-10 md:h-12" />
             </div>
             <h1 className="text-3xl font-bold text-[#111111] mb-3 tracking-tight">
               Bienvenido a Synkr AI
