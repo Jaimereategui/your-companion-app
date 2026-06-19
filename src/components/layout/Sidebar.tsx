@@ -62,9 +62,7 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
         >
           {/* Logo with close button */}
           <div className="flex items-center justify-between p-6 border-b border-border">
-            <div className="flex items-center gap-2">
-              <img src="/logo.svg" alt="Synkro AI Logo" className="h-8" />
-            </div>
+              <img src="/logo_synkro.png" alt="Synkro AI Logo" className="h-8" />
             <Button variant="ghost" size="icon" onClick={onMobileClose}>
               <X className="w-5 h-5" />
             </Button>
@@ -122,10 +120,10 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
       {/* Logo */}
       <div className="flex items-center gap-3 p-6 border-b border-border h-20">
         {!collapsed ? (
-          <img src="/logo.svg" alt="Synkro AI Logo" className="h-8" />
+            <img src="/logo_synkro.png" alt="Synkro AI Logo" className="h-8" />
         ) : (
           <div className="flex items-center justify-center w-full">
-            <img src="/logo-icon.svg" alt="Synkro AI Icon" className="h-8 w-8" />
+            <img src="/logo_synkro.png" alt="Synkro AI Icon" className="h-8 w-8 object-cover object-left" />
           </div>
         )}
       </div>
