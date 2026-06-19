@@ -47,13 +47,13 @@ export default function Login() {
         {/* Form Section */}
         <div className="w-full md:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col justify-center bg-white z-10">
           
-          <div className="mb-10 text-center md:text-left">
+          <div className="mb-10 text-center">
             {/* Logo */}
-            <div className="mb-6">
-              <img src="/logo_synkro.png" alt="Synkro AI Logo" className="h-10 md:h-12" />
+            <div className="mb-6 flex justify-center">
+              <img src="/logo_synkro.png" alt="Synkro AI Logo" className="h-20 md:h-24 w-auto object-contain" />
             </div>
             <h1 className="text-3xl font-bold text-[#111111] mb-3 tracking-tight">
-              Bienvenido a Synkr AI
+              Bienvenido a Synkro AI
             </h1>
             <p className="text-[#666666] text-sm md:text-base leading-relaxed">
               Optimiza tus productos y publícalos mejor con inteligencia artificial.
@@ -172,7 +172,7 @@ export default function Login() {
             {/* Visual SaaS mock element */}
             <div className="mt-10 p-4 bg-white rounded-2xl shadow-sm border border-[#EAEAEA] flex items-center gap-3 opacity-90 transform hover:scale-[1.02] transition-transform">
               <div className="w-2 h-2 rounded-full bg-[#FCCB34] animate-pulse"></div>
-              <p className="text-xs font-medium text-[#111111]">Synkr AI procesando +10,000 productos hoy</p>
+              <p className="text-xs font-medium text-[#111111]">Synkro AI procesando +10,000 productos hoy</p>
             </div>
           </div>
         </div>
