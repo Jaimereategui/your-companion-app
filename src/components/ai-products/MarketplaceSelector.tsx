@@ -65,8 +65,8 @@ export function MarketplaceSelector({ selected, onChange }: MarketplaceSelectorP
                   <Check className="w-3 h-3 text-[#111111] stroke-[3]" />
                 </div>
               )}
-              <div className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center overflow-hidden">
-                <img src={mp.logo} alt={mp.name} className="w-full h-full object-contain drop-shadow-sm" />
+              <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center overflow-hidden">
+                <img src={mp.logo} alt={mp.name} className="w-full h-full object-contain drop-shadow-sm scale-110" />
               </div>
               <span className="text-xs md:text-sm font-semibold text-[#111111] text-center">{mp.name}</span>
             </button>
