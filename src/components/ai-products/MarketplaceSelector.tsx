@@ -54,21 +54,21 @@ export function MarketplaceSelector({ selected, onChange }: MarketplaceSelectorP
               key={mp.id}
               onClick={() => toggleMarketplace(mp.id)}
               className={cn(
-                "relative flex flex-col items-center gap-2 md:gap-3 p-4 md:p-5 rounded-[16px] border transition-all duration-200",
+                "relative flex flex-col items-center justify-center p-3 md:p-4 rounded-[16px] border transition-all duration-200",
                 isSelected
                   ? "border-[#FCCB34] bg-[#FFF7D6] shadow-[0_4px_12px_rgba(252,203,52,0.15)]"
                   : "border-[#EAEAEA] bg-white hover:border-[#FCCB34]/40 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] hover:-translate-y-0.5"
               )}
             >
               {isSelected && (
-                <div className="absolute top-1.5 right-1.5 md:top-2 md:right-2 w-5 h-5 rounded-full bg-[#FCCB34] flex items-center justify-center shadow-sm">
+                <div className="absolute top-1.5 right-1.5 md:top-2 md:right-2 w-5 h-5 rounded-full bg-[#FCCB34] flex items-center justify-center shadow-sm z-10">
                   <Check className="w-3 h-3 text-[#111111] stroke-[3]" />
                 </div>
               )}
-              <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center overflow-hidden">
-                <img src={mp.logo} alt={mp.name} className="w-full h-full object-contain drop-shadow-sm scale-110" />
+              <div className="w-full h-12 md:h-16 px-1 flex items-center justify-center mb-1.5 md:mb-2">
+                <img src={mp.logo} alt={mp.name} className="w-full h-full object-contain" />
               </div>
-              <span className="text-xs md:text-sm font-semibold text-[#111111] text-center">{mp.name}</span>
+              <span className="text-xs md:text-sm font-semibold text-[#111111] text-center leading-tight">{mp.name}</span>
             </button>
           );
         })}
