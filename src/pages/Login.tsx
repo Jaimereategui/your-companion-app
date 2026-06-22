@@ -49,11 +49,12 @@ export default function Login() {
           
           <div className="mb-10 text-center md:text-left">
             {/* Logo placeholder */}
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#111111] text-[#FCCB34] mb-6 shadow-md">
-              <span className="font-bold text-xl">S</span>
+            <div className="flex items-center justify-center w-24 h-24 rounded-lg bg-[#111111] text-[#FCCB34] mb-6 shadow-md p-1 mx-auto">
+              <img src="http://synkroai.com/wp-content/uploads/2025/06/Synkro-AI-logo.png" alt="logo SynkroAi" className="max-w-full max-h-full object-contain rounded-lg" />
+              {/* <span className="font-bold text-xl">Synkro AI</span> */}
             </div>
             <h1 className="text-3xl font-bold text-[#111111] mb-3 tracking-tight">
-              Bienvenido a Synkr AI
+              Bienvenido a Synkro AI
             </h1>
             <p className="text-[#666666] text-sm md:text-base leading-relaxed">
               Optimiza tus productos y publícalos mejor con inteligencia artificial.
