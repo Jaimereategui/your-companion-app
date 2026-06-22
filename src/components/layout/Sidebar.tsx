@@ -61,16 +61,8 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
           )}
         >
           {/* Logo with close button */}
-          <div className="flex items-center justify-between p-6 border-b border-border">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center font-bold text-2xl tracking-tight text-black">
-                <span>Synkr</span>
-                <span className="bg-white text-black w-7 h-7 rounded-full flex items-center justify-center mx-[2px] shadow-sm pb-[2px]">
-                  o
-                </span>
-                <span className="ml-1">AI</span>
-              </div>
-            </div>
+          <div className="flex items-center justify-between p-6 border-b border-border h-24">
+              <img src="/logo_synkro.png" alt="Synkro AI Logo" className="h-12 w-auto object-contain" />
             <Button variant="ghost" size="icon" onClick={onMobileClose}>
               <X className="w-5 h-5" />
             </Button>
@@ -126,20 +118,12 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
       )}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 p-6 border-b border-border h-20">
+      <div className="flex items-center gap-3 p-6 border-b border-border h-24">
         {!collapsed ? (
-          <div className="flex items-center font-bold text-2xl tracking-tight text-black">
-            <span>Synkr</span>
-            <span className="bg-white text-black w-7 h-7 rounded-full flex items-center justify-center mx-[2px] shadow-sm pb-[2px]">
-              o
-            </span>
-            <span className="ml-1">AI</span>
-          </div>
+            <img src="/logo_synkro.png" alt="Synkro AI Logo" className="h-12 md:h-14 w-auto object-contain" />
         ) : (
           <div className="flex items-center justify-center w-full">
-            <span className="bg-white text-black w-8 h-8 font-bold text-lg rounded-full flex items-center justify-center shadow-sm">
-              S
-            </span>
+            <img src="/logo_synkro.png" alt="Synkro AI Icon" className="h-8 w-8 object-cover object-left" />
           </div>
         )}
       </div>

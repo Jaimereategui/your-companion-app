@@ -5,18 +5,18 @@ interface Marketplace {
   id: string;
   name: string;
   logo: string;
-  color: string;
+  imgClass?: string;
 }
 
 const marketplaces: Marketplace[] = [
-  { id: "mercadolibre", name: "MercadoLibre", logo: "🛒", color: "from-yellow-500 to-yellow-600" },
-  { id: "amazon", name: "Amazon", logo: "📦", color: "from-orange-500 to-orange-600" },
-  { id: "shopify", name: "Shopify", logo: "🛍️", color: "from-green-500 to-green-600" },
-  { id: "woocommerce", name: "WooCommerce", logo: "🔮", color: "from-purple-500 to-purple-600" },
-  { id: "falabella", name: "Falabella", logo: "🏬", color: "from-lime-500 to-lime-600" },
-  { id: "ripley", name: "Ripley", logo: "🏪", color: "from-red-500 to-red-600" },
-  { id: "juntoz", name: "Juntoz", logo: "🎯", color: "from-blue-500 to-blue-600" },
-  { id: "yape", name: "Yape", logo: "💜", color: "from-fuchsia-500 to-fuchsia-600" },
+  { id: "mercadolibre", name: "MercadoLibre", logo: "/mercadolibre.png" },
+  { id: "amazon", name: "Amazon", logo: "/amazon.png", imgClass: "scale-[1.7]" },
+  { id: "shopify", name: "Shopify", logo: "/shopify.png" },
+  { id: "woocommerce", name: "WooCommerce", logo: "/woocomerce.png" },
+  { id: "falabella", name: "Falabella", logo: "/Falabella.png" },
+  { id: "ripley", name: "Ripley", logo: "/Logo_Ripley_com.png" },
+  { id: "juntoz", name: "Juntoz", logo: "/juntoz.png", imgClass: "scale-[1.8]" },
+  { id: "yape", name: "Yape", logo: "/yape-logo-fondo-transparente.png" },
 ];
 
 interface MarketplaceSelectorProps {
@@ -55,26 +55,21 @@ export function MarketplaceSelector({ selected, onChange }: MarketplaceSelectorP
               key={mp.id}
               onClick={() => toggleMarketplace(mp.id)}
               className={cn(
-                "relative flex flex-col items-center gap-1.5 md:gap-2 p-3 md:p-4 rounded-[16px] border transition-all duration-200",
+                "relative flex flex-col items-center justify-center p-3 md:p-4 rounded-[16px] border transition-all duration-200",
                 isSelected
                   ? "border-[#FCCB34] bg-[#FFF7D6] shadow-[0_4px_12px_rgba(252,203,52,0.15)]"
                   : "border-[#EAEAEA] bg-white hover:border-[#FCCB34]/40 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] hover:-translate-y-0.5"
               )}
             >
               {isSelected && (
-                <div className="absolute top-1.5 right-1.5 md:top-2 md:right-2 w-5 h-5 rounded-full bg-[#FCCB34] flex items-center justify-center shadow-sm">
+                <div className="absolute top-1.5 right-1.5 md:top-2 md:right-2 w-5 h-5 rounded-full bg-[#FCCB34] flex items-center justify-center shadow-sm z-10">
                   <Check className="w-3 h-3 text-[#111111] stroke-[3]" />
                 </div>
               )}
-              <div
-                className={cn(
-                  "w-10 h-10 md:w-12 md:h-12 rounded-[12px] flex items-center justify-center text-xl md:text-2xl bg-gradient-to-br shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
-                  mp.color
-                )}
-              >
-                {mp.logo}
+              <div className="w-full h-12 md:h-16 px-1 flex items-center justify-center mb-1.5 md:mb-2">
+                <img src={mp.logo} alt={mp.name} className={cn("w-full h-full object-contain", mp.imgClass)} />
               </div>
-              <span className="text-xs md:text-sm font-semibold text-[#111111] text-center mt-1">{mp.name}</span>
+              <span className="text-xs md:text-sm font-semibold text-[#111111] text-center leading-tight">{mp.name}</span>
             </button>
           );
         })}
