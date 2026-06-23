@@ -88,8 +88,8 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
   return (
     <div className="space-y-4 md:space-y-6">
       <div>
-        <h3 className="font-semibold text-base md:text-lg text-[#111111]">Información del producto</h3>
-        <p className="text-xs md:text-sm text-[#666666]">
+        <h3 className="font-semibold text-base md:text-lg text-[#111111] dark:text-[#F8F8F5]">Información del producto</h3>
+        <p className="text-xs md:text-sm text-[#666666] dark:text-[#A1A1AA]">
           Ingresa los datos básicos y la IA completará el resto
         </p>
       </div>
@@ -112,7 +112,7 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
           {/* SKU + Price row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
             <div className="space-y-1.5 md:space-y-2">
-              <Label htmlFor="product-sku" className="text-xs md:text-sm text-[#111111] font-medium">
+              <Label htmlFor="product-sku" className="text-xs md:text-sm text-[#111111] dark:text-[#F8F8F5] font-medium">
                 SKU <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -120,11 +120,11 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
                 placeholder="Ej: APL-IP15PM-256"
                 value={sku}
                 onChange={(e) => setSku(e.target.value)}
-                className="bg-white border-[#EAEAEA] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm"
+                className="bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-[#333333] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm dark:text-[#F8F8F5]"
               />
             </div>
             <div className="space-y-1.5 md:space-y-2">
-              <Label htmlFor="product-price" className="text-xs md:text-sm text-[#111111] font-medium">Precio (opcional)</Label>
+              <Label htmlFor="product-price" className="text-xs md:text-sm text-[#111111] dark:text-[#F8F8F5] font-medium">Precio (opcional)</Label>
               <Input
                 id="product-price"
                 type="number"
@@ -133,24 +133,24 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
                 placeholder="Ej: 1299.99"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="bg-white border-[#EAEAEA] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm"
+                className="bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-[#333333] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm dark:text-[#F8F8F5]"
               />
             </div>
           </div>
 
           {/* Product name */}
           <div className="space-y-1.5 md:space-y-2">
-            <Label htmlFor="product-name" className="text-xs md:text-sm text-[#111111] font-medium">Nombre del producto</Label>
+            <Label htmlFor="product-name" className="text-xs md:text-sm text-[#111111] dark:text-[#F8F8F5] font-medium">Nombre del producto</Label>
             <Input
               id="product-name"
               placeholder="Ej: iPhone 15 Pro Max 256GB"
-              className="bg-white border-[#EAEAEA] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm"
+              className="bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-[#333333] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm dark:text-[#F8F8F5]"
             />
           </div>
 
           {/* Description */}
           <div className="space-y-1.5 md:space-y-2">
-            <Label htmlFor="product-description" className="text-xs md:text-sm text-[#111111] font-medium">
+            <Label htmlFor="product-description" className="text-xs md:text-sm text-[#111111] dark:text-[#F8F8F5] font-medium">
               Descripción o información adicional <span className="text-red-500">*</span>
             </Label>
             <Textarea
@@ -158,13 +158,13 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
               placeholder="Describe el producto, características, especificaciones técnicas, o cualquier información que tengas disponible."
               value={singleProduct}
               onChange={(e) => setSingleProduct(e.target.value)}
-              className="min-h-24 md:min-h-32 bg-white border-[#EAEAEA] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] resize-none text-sm px-4 py-3 shadow-sm"
+              className="min-h-24 md:min-h-32 bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-[#333333] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] resize-none text-sm px-4 py-3 shadow-sm dark:text-[#F8F8F5]"
             />
           </div>
 
           {/* Image upload */}
           <div className="space-y-2 md:space-y-3">
-            <Label className="text-xs md:text-sm text-[#111111] font-medium">
+            <Label className="text-xs md:text-sm text-[#111111] dark:text-[#F8F8F5] font-medium">
               Imágenes del producto <span className="text-red-500">*</span>
             </Label>
 
@@ -177,8 +177,8 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
               className={cn(
                 "border-2 border-dashed rounded-[16px] p-4 md:p-6 text-center transition-all cursor-pointer select-none",
                 isDragOver
-                  ? "border-[#FCCB34] bg-[#FFF7D6] scale-[1.01]"
-                  : "border-[#EAEAEA] bg-[#F8F8F5] hover:border-[#FCCB34]/60 hover:bg-[#FFF9E8]"
+                  ? "border-[#FCCB34] bg-[#FFF7D6] dark:bg-[#FCCB34]/20 scale-[1.01]"
+                  : "border-[#EAEAEA] dark:border-[#333333] bg-[#F8F8F5] dark:bg-[#1A1A1A] hover:border-[#FCCB34]/60 dark:hover:border-[#FCCB34]/60 hover:bg-[#FFF9E8] dark:hover:bg-[#FCCB34]/10"
               )}
             >
               <input
@@ -191,12 +191,12 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
               />
               <ImagePlus className={cn(
                 "w-6 h-6 md:w-8 md:h-8 mx-auto mb-2 transition-colors",
-                isDragOver ? "text-[#111111]" : "text-[#666666]"
+                isDragOver ? "text-[#111111] dark:text-[#FCCB34]" : "text-[#666666] dark:text-[#A1A1AA]"
               )} />
-              <p className="text-xs md:text-sm font-medium text-[#111111]">
+              <p className="text-xs md:text-sm font-medium text-[#111111] dark:text-[#F8F8F5]">
                 {isDragOver ? "Suéltala aquí" : "Arrastra imágenes o haz clic para seleccionar"}
               </p>
-              <p className="text-[10px] md:text-xs text-[#666666] mt-1">
+              <p className="text-[10px] md:text-xs text-[#666666] dark:text-[#A1A1AA] mt-1">
                 JPG, PNG, WEBP · Múltiples imágenes permitidas
               </p>
             </div>
@@ -291,8 +291,8 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
         className={cn(
           "w-full h-12 rounded-[12px] font-semibold text-sm md:text-base transition-all",
           (isProcessing || !isFormReady || (mode === "single" && isSingleDisabled) || (mode === "bulk" && !bulkFile))
-            ? "bg-[#FFF3C4] text-[#111111]/50 shadow-none cursor-not-allowed"
-            : "bg-[#111111] hover:bg-[#222222] text-white shadow-[0_8px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_12px_20px_rgba(0,0,0,0.15)] hover:-translate-y-0.5"
+            ? "bg-[#FFF3C4] dark:bg-[#333333] text-[#111111]/50 dark:text-[#A1A1AA] shadow-none cursor-not-allowed"
+            : "bg-[#111111] dark:bg-[#FCCB34] hover:bg-[#222222] dark:hover:bg-[#E6B620] text-white dark:text-[#111111] shadow-[0_8px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_12px_20px_rgba(0,0,0,0.15)] hover:-translate-y-0.5"
         )}
       >
         {isProcessing ? (

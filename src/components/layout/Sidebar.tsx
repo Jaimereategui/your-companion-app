@@ -56,12 +56,12 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed left-0 top-0 h-screen bg-white border-r border-border z-50 flex flex-col w-72 transition-transform duration-300",
+            "fixed left-0 top-0 h-screen bg-white dark:bg-[#111111] border-r border-border dark:border-[#333333] z-50 flex flex-col w-72 transition-transform duration-300",
             mobileOpen ? "translate-x-0" : "-translate-x-full"
           )}
         >
           {/* Logo with close button */}
-          <div className="flex items-center justify-between p-6 border-b border-border h-24">
+          <div className="flex items-center justify-between p-6 border-b border-border dark:border-[#333333] h-24">
               <img src="/logo_synkro.png" alt="Synkro AI Logo" className="h-12 w-auto object-contain" />
             <Button variant="ghost" size="icon" onClick={onMobileClose}>
               <X className="w-5 h-5" />
@@ -81,8 +81,8 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
                   className={cn(
                     "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative",
                     isActive
-                      ? "bg-[#FFF1B8] text-[#111111] font-semibold"
-                      : "text-[#666666] hover:bg-[#F8F8F5] hover:text-[#111111]"
+                      ? "bg-[#FFF1B8] dark:bg-[#FCCB34]/20 text-[#111111] dark:text-[#FCCB34] font-semibold"
+                      : "text-[#666666] dark:text-[#A1A1AA] hover:bg-[#F8F8F5] dark:hover:bg-[#1A1A1A] hover:text-[#111111] dark:hover:text-[#F8F8F5]"
                   )}
                 >
                   <Icon
@@ -113,12 +113,12 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 h-screen bg-white border-r border-border z-50 flex flex-col transition-all duration-300",
+        "fixed left-0 top-0 h-screen bg-white dark:bg-[#111111] border-r border-border dark:border-[#333333] z-50 flex flex-col transition-all duration-300",
         collapsed ? "w-20" : "w-64"
       )}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 p-6 border-b border-border h-24">
+      <div className="flex items-center gap-3 p-6 border-b border-border dark:border-[#333333] h-24">
         {!collapsed ? (
             <img src="/logo_synkro.png" alt="Synkro AI Logo" className="h-12 md:h-14 w-auto object-contain" />
         ) : (
@@ -141,8 +141,8 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative",
                 isActive
-                  ? "bg-[#FFF1B8] text-[#111111] font-semibold"
-                  : "text-[#666666] hover:bg-[#F8F8F5] hover:text-[#111111]"
+                  ? "bg-[#FFF1B8] dark:bg-[#FCCB34]/20 text-[#111111] dark:text-[#FCCB34] font-semibold"
+                  : "text-[#666666] dark:text-[#A1A1AA] hover:bg-[#F8F8F5] dark:hover:bg-[#1A1A1A] hover:text-[#111111] dark:hover:text-[#F8F8F5]"
               )}
             >
               <Icon
@@ -170,7 +170,7 @@ export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose }:
       </nav>
 
       {/* Collapse Button */}
-      <div className="p-4 border-t border-border">
+      <div className="p-4 border-t border-border dark:border-[#333333]">
         <Button
           variant="ghost"
           size="sm"
