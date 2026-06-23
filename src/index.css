@@ -59,48 +59,48 @@
   }
 
   .dark {
-    --background: 60 20% 97%; /* #F8F8F5 */
-    --foreground: 0 0% 7%; /* #111111 */
-    --card: 0 0% 100%; /* #FFFFFF */
-    --card-foreground: 0 0% 7%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 7%;
+    --background: 0 0% 0%; /* #000000 */
+    --foreground: 60 20% 97%; /* #F8F8F5 */
+    --card: 0 0% 7%; /* #111111 */
+    --card-foreground: 60 20% 97%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 60 20% 97%;
     --primary: 45 97% 60%; /* #FCCB34 */
     --primary-foreground: 0 0% 0%;
-    --secondary: 45 100% 88%; /* #FFF3C4 */
-    --secondary-foreground: 0 0% 7%;
-    --muted: 0 0% 93%; /* #EDEDED */
-    --muted-foreground: 0 0% 40%;
-    --accent: 45 100% 88%; /* #FFF3C4 */
-    --accent-foreground: 0 0% 7%;
-    --destructive: 0 72% 50%;
-    --destructive-foreground: 0 85% 97%;
-    --border: 0 0% 92%; /* #EAEAEA */
-    --input: 0 0% 92%;
+    --secondary: 0 0% 15%; /* #222222 */
+    --secondary-foreground: 60 20% 97%;
+    --muted: 0 0% 15%; /* #222222 */
+    --muted-foreground: 0 0% 65%; /* #A1A1AA */
+    --accent: 0 0% 15%; /* #222222 */
+    --accent-foreground: 60 20% 97%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 60 20% 97%;
+    --border: 0 0% 100%; /* #FFFFFF */
+    --input: 0 0% 20%;
     --ring: 45 97% 60%;
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 7%;
+    --sidebar-background: 0 0% 0%;
+    --sidebar-foreground: 60 20% 97%;
     --sidebar-primary: 45 97% 60%;
     --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 45 100% 88%;
-    --sidebar-accent-foreground: 0 0% 7%;
-    --sidebar-border: 0 0% 92%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 60 20% 97%;
+    --sidebar-border: 0 0% 100%;
     --sidebar-ring: 45 97% 60%;
 
     --chart-1: 45 97% 60%;
-    --chart-2: 0 0% 7%;
-    --chart-3: 0 0% 93%;
+    --chart-2: 0 0% 93%;
+    --chart-3: 0 0% 15%;
     --chart-4: 45 100% 88%;
-    --chart-5: 0 0% 40%;
-    --sidebar: 0 0% 100%;
-    --shadow-2xs: 0 2px 8px rgba(0,0,0,0.02);
-    --shadow-xs: 0 4px 12px rgba(0,0,0,0.04);
-    --shadow-sm: 0 8px 24px rgba(0,0,0,0.06);
-    --shadow: 0 10px 30px rgba(0,0,0,0.08);
-    --shadow-md: 0 12px 36px rgba(0,0,0,0.1);
-    --shadow-lg: 0 20px 48px rgba(0,0,0,0.12);
-    --shadow-xl: 0 24px 64px rgba(0,0,0,0.14);
-    --shadow-2xl: 0 32px 80px rgba(0,0,0,0.16);
+    --chart-5: 0 0% 65%;
+    --sidebar: 0 0% 7%;
+    --shadow-2xs: 0 2px 8px rgba(0,0,0,0.2);
+    --shadow-xs: 0 4px 12px rgba(0,0,0,0.3);
+    --shadow-sm: 0 8px 24px rgba(0,0,0,0.4);
+    --shadow: 0 10px 30px rgba(0,0,0,0.5);
+    --shadow-md: 0 12px 36px rgba(0,0,0,0.6);
+    --shadow-lg: 0 20px 48px rgba(0,0,0,0.7);
+    --shadow-xl: 0 24px 64px rgba(0,0,0,0.8);
+    --shadow-2xl: 0 32px 80px rgba(0,0,0,0.9);
   }
 }
 

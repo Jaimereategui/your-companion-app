@@ -80,7 +80,7 @@ export function AIProductsModule() {
   return (
     <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
       {/* Hero Section */}
-      <Card className="p-4 md:p-8 bg-white dark:bg-[#111111] shadow-[0_10px_30px_rgba(0,0,0,0.08)] dark:shadow-none border border-[#EAEAEA] dark:border-[#333333] overflow-hidden relative rounded-[20px] transition-colors duration-200">
+      <Card className="p-4 md:p-8 bg-white dark:bg-[#111111] shadow-[0_10px_30px_rgba(0,0,0,0.08)] dark:shadow-none border border-[#EAEAEA] dark:border-white/20 overflow-hidden relative rounded-[20px] transition-colors duration-200">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#FCCB34] opacity-5 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2" />
 
         <div className="relative flex flex-col sm:flex-row items-start gap-4 md:gap-6">
@@ -100,10 +100,10 @@ export function AIProductsModule() {
               <span className="text-[10px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-[#FFF1B8] dark:bg-[#FCCB34]/20 text-[#111111] dark:text-[#FCCB34] font-semibold border border-[#FCCB34]/30 dark:border-[#FCCB34]/20 shadow-sm">
                 ✨ Títulos SEO optimizados
               </span>
-              <span className="text-[10px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-[#F8F8F5] dark:bg-[#1A1A1A] text-[#111111] dark:text-[#F8F8F5] font-medium border border-[#EAEAEA] dark:border-[#333333] shadow-sm">
+              <span className="text-[10px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-[#F8F8F5] dark:bg-[#1A1A1A] text-[#111111] dark:text-[#F8F8F5] font-medium border border-[#EAEAEA] dark:border-white/20 shadow-sm">
                 📝 Descripciones que venden
               </span>
-              <span className="text-[10px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-white dark:bg-[#222222] text-[#111111] dark:text-[#F8F8F5] font-medium border border-[#EAEAEA] dark:border-[#333333] shadow-sm">
+              <span className="text-[10px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-white dark:bg-[#222222] text-[#111111] dark:text-[#F8F8F5] font-medium border border-[#EAEAEA] dark:border-white/20 shadow-sm">
                 🏷️ Atributos automáticos
               </span>
             </div>
@@ -112,7 +112,7 @@ export function AIProductsModule() {
       </Card>
 
       {/* Step 1: Marketplaces */}
-      <Card className="p-4 md:p-6 bg-white dark:bg-[#111111] shadow-sm border border-[#EAEAEA] dark:border-[#333333] rounded-[16px] transition-colors duration-200">
+      <Card className="p-4 md:p-6 bg-white dark:bg-[#111111] shadow-sm border border-[#EAEAEA] dark:border-white/20 rounded-[16px] transition-colors duration-200">
         <div className="flex items-center gap-3 mb-4 md:mb-6">
           <span className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#FCCB34] text-[#111111] text-xs md:text-sm font-bold flex items-center justify-center shadow-sm">
             1
@@ -126,7 +126,7 @@ export function AIProductsModule() {
       </Card>
 
       {/* Step 2: Category */}
-      <Card className="p-4 md:p-6 bg-white dark:bg-[#111111] shadow-sm border border-[#EAEAEA] dark:border-[#333333] rounded-[16px] transition-colors duration-200">
+      <Card className="p-4 md:p-6 bg-white dark:bg-[#111111] shadow-sm border border-[#EAEAEA] dark:border-white/20 rounded-[16px] transition-colors duration-200">
         <div className="flex items-center gap-3 mb-4 md:mb-6">
           <span className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#FCCB34] text-[#111111] text-xs md:text-sm font-bold flex items-center justify-center shadow-sm">
             2
@@ -140,7 +140,7 @@ export function AIProductsModule() {
       </Card>
 
       {/* Step 3: Product Input */}
-      <Card className="p-4 md:p-6 bg-white dark:bg-[#111111] shadow-sm border border-[#EAEAEA] dark:border-[#333333] rounded-[16px] transition-colors duration-200">
+      <Card className="p-4 md:p-6 bg-white dark:bg-[#111111] shadow-sm border border-[#EAEAEA] dark:border-white/20 rounded-[16px] transition-colors duration-200">
         <div className="flex items-center gap-3 mb-4 md:mb-6">
           <span className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#FCCB34] text-[#111111] text-xs md:text-sm font-bold flex items-center justify-center shadow-sm">
             3
@@ -156,7 +156,7 @@ export function AIProductsModule() {
 
       {/* Step 4: Generated Fields Preview */}
       {hasGeneratedContent && (
-        <Card className="p-4 md:p-6 bg-white dark:bg-[#111111] shadow-sm border border-[#EAEAEA] dark:border-[#333333] rounded-[16px] transition-colors duration-200">
+        <Card className="p-4 md:p-6 bg-white dark:bg-[#111111] shadow-sm border border-[#EAEAEA] dark:border-white/20 rounded-[16px] transition-colors duration-200">
           <div className="flex items-center gap-3 mb-4 md:mb-6">
             <span className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-[#111111] dark:bg-[#FCCB34] text-white dark:text-[#111111] text-xs md:text-sm font-bold flex items-center justify-center shadow-sm">
               4

@@ -120,7 +120,7 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
                 placeholder="Ej: APL-IP15PM-256"
                 value={sku}
                 onChange={(e) => setSku(e.target.value)}
-                className="bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-[#333333] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm dark:text-[#F8F8F5]"
+                className="bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-white/20 focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm dark:text-[#F8F8F5]"
               />
             </div>
             <div className="space-y-1.5 md:space-y-2">
@@ -133,7 +133,7 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
                 placeholder="Ej: 1299.99"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-[#333333] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm dark:text-[#F8F8F5]"
+                className="bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-white/20 focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm dark:text-[#F8F8F5]"
               />
             </div>
           </div>
@@ -144,7 +144,7 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
             <Input
               id="product-name"
               placeholder="Ej: iPhone 15 Pro Max 256GB"
-              className="bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-[#333333] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm dark:text-[#F8F8F5]"
+              className="bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-white/20 focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] h-10 md:h-12 text-sm px-4 shadow-sm dark:text-[#F8F8F5]"
             />
           </div>
 
@@ -158,7 +158,7 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
               placeholder="Describe el producto, características, especificaciones técnicas, o cualquier información que tengas disponible."
               value={singleProduct}
               onChange={(e) => setSingleProduct(e.target.value)}
-              className="min-h-24 md:min-h-32 bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-[#333333] focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] resize-none text-sm px-4 py-3 shadow-sm dark:text-[#F8F8F5]"
+              className="min-h-24 md:min-h-32 bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-white/20 focus-visible:border-[#FCCB34] focus-visible:ring-[#FCCB34] resize-none text-sm px-4 py-3 shadow-sm dark:text-[#F8F8F5]"
             />
           </div>
 
@@ -178,7 +178,7 @@ export function ProductInputForm({ onSubmit, isProcessing, isFormReady = true }:
                 "border-2 border-dashed rounded-[16px] p-4 md:p-6 text-center transition-all cursor-pointer select-none",
                 isDragOver
                   ? "border-[#FCCB34] bg-[#FFF7D6] dark:bg-[#FCCB34]/20 scale-[1.01]"
-                  : "border-[#EAEAEA] dark:border-[#333333] bg-[#F8F8F5] dark:bg-[#1A1A1A] hover:border-[#FCCB34]/60 dark:hover:border-[#FCCB34]/60 hover:bg-[#FFF9E8] dark:hover:bg-[#FCCB34]/10"
+                  : "border-[#EAEAEA] dark:border-white/20 bg-[#F8F8F5] dark:bg-[#1A1A1A] hover:border-[#FCCB34]/60 dark:hover:border-[#FCCB34]/60 hover:bg-[#FFF9E8] dark:hover:bg-[#FCCB34]/10"
               )}
             >
               <input

@@ -84,10 +84,10 @@ export function CategorySelector({ value, onChange }: CategorySelectorProps) {
       </div>
       
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-full h-12 bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-[#333333] hover:border-[#FCCB34]/60 focus:border-[#FCCB34] focus:ring-[#FCCB34] transition-colors shadow-sm dark:text-[#F8F8F5]">
+        <SelectTrigger className="w-full h-12 bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-white/20 hover:border-[#FCCB34]/60 focus:border-[#FCCB34] focus:ring-[#FCCB34] transition-colors shadow-sm dark:text-[#F8F8F5]">
           <SelectValue placeholder="Selecciona una categoría" />
         </SelectTrigger>
-        <SelectContent className="bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-[#333333] shadow-lg max-h-80">
+        <SelectContent className="bg-white dark:bg-[#1A1A1A] border-[#EAEAEA] dark:border-white/20 shadow-lg max-h-80">
           {categories.map((cat) => (
             <SelectGroup key={cat.id}>
               <SelectLabel className="text-[#111111] dark:text-[#F8F8F5] font-bold">

@@ -114,7 +114,7 @@ export function Header({ title, subtitle, onMenuClick, showMenuButton }: HeaderP
     : "?";
 
   return (
-    <header className="sticky top-0 z-40 bg-white dark:bg-[#111111] border-b border-[#EDEDED] dark:border-[#333333] px-4 md:px-8 py-4 shadow-sm transition-colors duration-200">
+    <header className="sticky top-0 z-40 bg-white dark:bg-[#111111] border-b border-[#EDEDED] dark:border-white/20 px-4 md:px-8 py-4 shadow-sm transition-colors duration-200">
       <div className="flex items-center justify-between gap-4">
         {/* ── Left: Menu + Title ─────────────────────────────────────────── */}
         <div className="flex items-center gap-3 min-w-0">

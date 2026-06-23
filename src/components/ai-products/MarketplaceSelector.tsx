@@ -42,7 +42,7 @@ export function MarketplaceSelector({ selected, onChange }: MarketplaceSelectorP
             Selecciona dónde quieres enviar los productos
           </p>
         </div>
-        <span className="text-xs md:text-sm text-[#666666] dark:text-[#A1A1AA] font-medium bg-[#F8F8F5] dark:bg-[#1A1A1A] px-3 py-1 rounded-full border border-[#EAEAEA] dark:border-[#333333]">
+        <span className="text-xs md:text-sm text-[#666666] dark:text-[#A1A1AA] font-medium bg-[#F8F8F5] dark:bg-[#1A1A1A] px-3 py-1 rounded-full border border-[#EAEAEA] dark:border-white/20">
           {selected.length} seleccionados
         </span>
       </div>
@@ -58,7 +58,7 @@ export function MarketplaceSelector({ selected, onChange }: MarketplaceSelectorP
                 "relative flex flex-col items-center justify-center p-3 md:p-4 rounded-[16px] border transition-all duration-200",
                 isSelected
                   ? "border-[#FCCB34] bg-[#FFF7D6] dark:bg-[#FCCB34]/20 shadow-[0_4px_12px_rgba(252,203,52,0.15)]"
-                  : "border-[#EAEAEA] dark:border-[#333333] bg-white dark:bg-[#111111] hover:border-[#FCCB34]/40 dark:hover:border-[#FCCB34]/40 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_20px_rgba(252,203,52,0.1)] hover:-translate-y-0.5"
+                  : "border-[#EAEAEA] dark:border-white/20 bg-white dark:bg-[#111111] hover:border-[#FCCB34]/40 dark:hover:border-white/40 hover:shadow-[0_8px_20px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_20px_rgba(252,203,52,0.1)] hover:-translate-y-0.5"
               )}
             >
               {isSelected && (
