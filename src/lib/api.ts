@@ -122,7 +122,15 @@ async function apiDownload(
   });
 
   if (!response.ok) {
-    throw new Error('Error al descargar el archivo');
+    let errorMsg = 'Error al descargar el archivo';
+    try {
+      const json = await response.json();
+      if (json.message) errorMsg = typeof json.message === 'string' ? json.message : json.message[0];
+      else if (json.error) errorMsg = json.error;
+    } catch (e) {
+      // Ignorar si no es JSON
+    }
+    throw new Error(errorMsg);
   }
 
   const blob = await response.blob();

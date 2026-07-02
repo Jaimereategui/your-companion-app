@@ -158,12 +158,14 @@ export const productsApi = {
 
   /** Exportar catálogo completo */
   exportProducts: (format: 'json' | 'csv' | 'xlsx', params: ProductsQueryParams = {}) => {
-    return apiDownload(`/export/products/${format}${buildQueryString(params)}`, `productos.${format}`);
+    const { page, limit, ...exportParams } = params;
+    return apiDownload(`/export/products/${format}${buildQueryString(exportParams)}`, `productos.${format}`);
   },
 
   /** Exportar contenido generado por IA */
   exportAiContent: (format: 'json' | 'csv' | 'xlsx', params: ProductsQueryParams = {}) => {
-    return apiDownload(`/export/ai-content/${format}${buildQueryString(params)}`, `contenido-ia.${format}`);
+    const { page, limit, ...exportParams } = params;
+    return apiDownload(`/export/ai-content/${format}${buildQueryString(exportParams)}`, `contenido-ia.${format}`);
   }
 };
 

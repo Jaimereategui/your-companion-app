@@ -79,8 +79,8 @@ export function ProductsModule() {
       toast.loading("Exportando productos...", { id: "export-toast" });
       await productsApi.exportProducts(format, filters);
       toast.success("Exportación completada", { id: "export-toast" });
-    } catch (error) {
-      toast.error("Error al exportar productos", { id: "export-toast" });
+    } catch (error: any) {
+      toast.error(error.message || "Error al exportar productos", { id: "export-toast" });
     }
   };
 
