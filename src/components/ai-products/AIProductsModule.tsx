@@ -77,6 +77,23 @@ export function AIProductsModule() {
     }
   };
 
+  const handleExport = async (format: string) => {
+    if (!generatedProduct) return;
+    try {
+      toast.loading(`Exportando en ${format.toUpperCase()}...`, { id: "export-ai-toast" });
+      await productsApi.exportAiContent(format as "csv" | "xlsx" | "json", {
+        search: generatedProduct.sku // Filtra por el SKU generado
+      });
+      toast.success("Exportación completada", { id: "export-ai-toast" });
+    } catch (error: any) {
+      toast.error(error.message || "Error al exportar", { id: "export-ai-toast" });
+    }
+  };
+
+  const handlePublish = async () => {
+    toast.success("Publicación iniciada (simulación)");
+  };
+
   return (
     <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
       {/* Hero Section */}
@@ -170,6 +187,8 @@ export function AIProductsModule() {
           <ExportActions
             visible={hasGeneratedContent}
             selectedMarketplaces={selectedMarketplaces}
+            onExport={handleExport}
+            onPublish={handlePublish}
           />
         </Card>
       )}
