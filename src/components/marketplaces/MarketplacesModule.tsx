@@ -21,14 +21,15 @@ export interface MarketplaceDef {
   id: string;
   name: string;
   logo: string;
-  color: string;
+  imgClass?: string;
   available: boolean;
 }
 
+// Mismos logos PNG de /public que usa MarketplaceSelector
 const MARKETPLACES: MarketplaceDef[] = [
-  { id: "mercadolibre", name: "MercadoLibre", logo: "🛒", color: "from-yellow-500 to-yellow-600", available: true },
-  { id: "shopify",      name: "Shopify",      logo: "🛍️", color: "from-green-500 to-green-600",   available: false },
-  { id: "amazon",       name: "Amazon",       logo: "📦", color: "from-orange-500 to-orange-600", available: false },
+  { id: "mercadolibre", name: "MercadoLibre", logo: "/mercadolibre.png", available: true },
+  { id: "shopify",      name: "Shopify",      logo: "/shopify.png",      available: false },
+  { id: "amazon",       name: "Amazon",       logo: "/amazon.png",       imgClass: "scale-[1.7]", available: false },
 ];
 
 // ─── Módulo principal ─────────────────────────────────────────────────────────

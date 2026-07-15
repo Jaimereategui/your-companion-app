@@ -18,7 +18,7 @@ import { toast } from "sonner";
 
 // Solo Mercado Libre tiene sincronización real por ahora
 const PUBLISHABLE = [
-  { id: "mercadolibre", name: "MercadoLibre", logo: "🛒", color: "from-yellow-500 to-yellow-600" },
+  { id: "mercadolibre", name: "MercadoLibre", logo: "/mercadolibre.png" },
 ];
 
 interface PublishProductDialogProps {
@@ -120,13 +120,8 @@ export function PublishProductDialog({ product, onClose }: PublishProductDialogP
                 onClick={() => !isPublished && toggle(mp.id)}
               >
                 <div className="flex items-center gap-3">
-                  <div
-                    className={cn(
-                      "w-10 h-10 rounded-lg flex items-center justify-center text-xl bg-gradient-to-br",
-                      mp.color
-                    )}
-                  >
-                    {mp.logo}
+                  <div className="w-16 h-10 rounded-[8px] flex items-center justify-center bg-transparent dark:bg-[#EAEAEA] px-2 py-1 shrink-0 overflow-hidden">
+                    <img src={mp.logo} alt={mp.name} className="w-full h-full object-contain" />
                   </div>
                   <div>
                     <p className="font-medium text-sm">{mp.name}</p>

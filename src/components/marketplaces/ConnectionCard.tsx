@@ -35,13 +35,12 @@ export function ConnectionCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div
-            className={cn(
-              "w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center text-xl md:text-2xl bg-gradient-to-br shrink-0",
-              marketplace.color
-            )}
-          >
-            {marketplace.logo}
+          <div className="w-16 h-11 md:w-20 md:h-12 rounded-[8px] flex items-center justify-center bg-transparent dark:bg-[#EAEAEA] px-2 py-1 shrink-0 overflow-hidden">
+            <img
+              src={marketplace.logo}
+              alt={marketplace.name}
+              className={cn("w-full h-full object-contain", marketplace.imgClass)}
+            />
           </div>
           <div>
             <p className="font-semibold text-sm md:text-base">{marketplace.name}</p>
