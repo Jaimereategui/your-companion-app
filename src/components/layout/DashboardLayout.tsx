@@ -6,7 +6,10 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { AIProductsModule } from "@/components/ai-products/AIProductsModule";
 import { ProductsModule } from "@/components/products/ProductsModule";
 import { MarketplacesModule } from "@/components/marketplaces/MarketplacesModule";
+import { AnalyticsModule } from "@/components/analytics/AnalyticsModule";
+import { AdminModule } from "@/components/admin/AdminModule";
 import { FormDraftProvider, useFormDraft } from "@/contexts/FormDraftContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { NavigationGuardDialog } from "./NavigationGuardDialog";
 import { Construction } from "lucide-react";
 
@@ -17,11 +20,12 @@ const pageTitles: Record<string, { title: string; subtitle: string }> = {
   products:      { title: "Productos",         subtitle: "Gestiona tu catálogo de productos" },
   "ai-products": { title: "IA para Productos", subtitle: "Optimiza tus productos con inteligencia artificial" },
   marketplaces:  { title: "Marketplaces",      subtitle: "Conecta y sincroniza tus canales de venta" },
-  analytics:     { title: "Analíticas",        subtitle: "Métricas y reportes de rendimiento" },
+  analytics:     { title: "Analíticas",        subtitle: "Tus ventas y el rendimiento de tus canales" },
+  admin:         { title: "Superadmin",        subtitle: "Clientes, pagos y control financiero" },
   settings:      { title: "Configuración",     subtitle: "Ajustes de tu cuenta y preferencias" },
 };
 
-const IMPLEMENTED = ["ai-products", "products", "marketplaces"];
+const IMPLEMENTED = ["ai-products", "products", "marketplaces", "analytics", "admin"];
 
 // ─── Coming soon placeholder ──────────────────────────────────────────────────
 
@@ -59,6 +63,8 @@ function DashboardContent() {
 
   const isMobile       = useIsMobile();
   const { checkDirty } = useFormDraft();
+  const { user }       = useAuth();
+  const isAdmin        = user?.role === "admin";
 
   const pageInfo = pageTitles[activeItem] ?? { title: "Dashboard", subtitle: "" };
 
@@ -105,6 +111,7 @@ function DashboardContent() {
         onItemChange={handleSectionChange}
         mobileOpen={mobileMenuOpen}
         onMobileClose={() => setMobileMenuOpen(false)}
+        isAdmin={isAdmin}
       />
 
       <main
@@ -138,8 +145,18 @@ function DashboardContent() {
             {mounted.has("marketplaces") && <MarketplacesModule />}
           </div>
 
+          <div style={{ display: activeItem === "analytics" ? "block" : "none" }}>
+            {mounted.has("analytics") && <AnalyticsModule />}
+          </div>
+
+          {isAdmin && (
+            <div style={{ display: activeItem === "admin" ? "block" : "none" }}>
+              {mounted.has("admin") && <AdminModule />}
+            </div>
+          )}
+
           {/* Placeholder for sections not yet implemented */}
-          {!IMPLEMENTED.includes(activeItem) && (
+          {(!IMPLEMENTED.includes(activeItem) || (activeItem === "admin" && !isAdmin)) && (
             <ComingSoonSection section={activeItem} />
           )}
         </div>
