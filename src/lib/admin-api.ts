@@ -132,6 +132,13 @@ export const adminApi = {
       body: JSON.stringify(dto),
     }),
 
+  /** Asigna una contraseña nueva. Sin newPassword, el servidor genera una. */
+  resetPassword: (id: string, newPassword?: string) =>
+    apiRequest<{ message: string; password: string }>(`/admin/clients/${id}/reset-password`, {
+      method: 'POST',
+      body: JSON.stringify(newPassword ? { newPassword } : {}),
+    }),
+
   /** Elimina la cuenta y todos sus datos */
   deleteClient: (id: string) =>
     apiRequest<{ message: string }>(`/admin/clients/${id}`, { method: 'DELETE' }),

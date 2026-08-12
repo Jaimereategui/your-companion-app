@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Loader2, Plus, Save, ShieldCheck, Trash2 } from "lucide-react";
+import { Copy, KeyRound, Loader2, Plus, Save, ShieldCheck, Trash2 } from "lucide-react";
 
 const RESTRICTABLE = APP_SECTIONS.filter((s) => !s.always);
 
@@ -64,6 +64,7 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
   const [sections, setSections] = useState<string[]>([]);
   const [fullAccess, setFullAccess] = useState(true);
   const [isActive, setIsActive] = useState(true);
+  const [newPassword, setNewPassword] = useState<string | null>(null);
 
   const { data: detailResult, isLoading } = useQuery({
     queryKey: ["admin-client", client?.id],
@@ -93,6 +94,7 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
     setSections(current ?? []);
     setFullAccess(!current || current.length === 0);
     setIsActive(detail?.isActive ?? client.isActive ?? true);
+    setNewPassword(null);
   }, [client, detail]);
 
   const saveProfile = useMutation({
@@ -157,6 +159,16 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
       queryClient.invalidateQueries({ queryKey: ["admin-client", client?.id] });
     },
     onError: () => toast.error("Error al guardar los permisos"),
+  });
+
+  const resetPassword = useMutation({
+    mutationFn: () => adminApi.resetPassword(client!.id),
+    onSuccess: (res) => {
+      if (res.error) return toast.error(res.error);
+      setNewPassword(res.data!.password);
+      toast.success("Contraseña restablecida");
+    },
+    onError: () => toast.error("Error al restablecer la contraseña"),
   });
 
   const toggleSection = (id: string) =>
@@ -359,6 +371,56 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
               )}
               Guardar permisos
             </Button>
+
+            {/* Contraseña */}
+            <div className="pt-5 border-t border-border space-y-3">
+              <div className="flex items-center gap-2">
+                <KeyRound className="w-4 h-4 text-[#FCCB34]" />
+                <p className="font-medium text-sm">Contraseña</p>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Úsalo si la persona perdió su acceso. Se generará una contraseña nueva que podrás
+                copiar y enviarle; sus sesiones abiertas se cerrarán.
+              </p>
+
+              {newPassword ? (
+                <div className="p-3 rounded-xl border border-green-500/30 bg-green-500/5 space-y-2">
+                  <p className="text-xs text-muted-foreground">
+                    Contraseña nueva — cópiala ahora, no volverá a mostrarse:
+                  </p>
+                  <div className="flex gap-2">
+                    <code className="flex-1 px-3 py-2 rounded-lg bg-secondary font-mono text-sm select-all">
+                      {newPassword}
+                    </code>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        navigator.clipboard?.writeText(newPassword);
+                        toast.success("Contraseña copiada");
+                      }}
+                      title="Copiar"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() => resetPassword.mutate()}
+                  disabled={resetPassword.isPending}
+                  className="w-full sm:w-auto"
+                >
+                  {resetPassword.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <KeyRound className="w-4 h-4 mr-2" />
+                  )}
+                  Generar contraseña nueva
+                </Button>
+              )}
+            </div>
           </TabsContent>
 
           {/* ── PAGOS ──────────────────────────────────────────── */}

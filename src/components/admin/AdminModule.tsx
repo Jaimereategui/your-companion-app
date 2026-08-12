@@ -6,6 +6,7 @@ import { ClientsTable } from "./ClientsTable";
 import { ClientDetailDialog } from "./ClientDetailDialog";
 import { CreateClientDialog } from "./CreateClientDialog";
 import { DeleteClientDialog } from "./DeleteClientDialog";
+import { CrmModule } from "@/components/crm/CrmModule";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -51,6 +52,7 @@ export function AdminModule() {
         <TabsList>
           <TabsTrigger value="finanzas">Finanzas</TabsTrigger>
           <TabsTrigger value="clientes">Clientes ({clients.length})</TabsTrigger>
+          <TabsTrigger value="crm">CRM</TabsTrigger>
         </TabsList>
 
         <TabsContent value="finanzas" className="pt-6">
@@ -82,6 +84,9 @@ export function AdminModule() {
             onDelete={(c) => setDeleteTarget(c)}
             currentUserId={user?.id}
           />
+        </TabsContent>
+        <TabsContent value="crm" className="pt-6">
+          <CrmModule />
         </TabsContent>
       </Tabs>
 
