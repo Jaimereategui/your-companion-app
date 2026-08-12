@@ -23,6 +23,24 @@ interface NavItem {
   adminOnly?: boolean;
 }
 
+/** Estas dos nunca se restringen: sin ellas la app sería inusable. */
+const ALWAYS_ALLOWED = ["dashboard", "settings"];
+
+/**
+ * ¿El usuario puede ver esta sección? El administrador siempre puede,
+ * y una lista vacía significa acceso completo.
+ */
+export function isSectionAllowed(
+  sectionId: string,
+  allowedSections?: string[] | null,
+  isAdmin?: boolean,
+): boolean {
+  if (isAdmin) return true;
+  if (ALWAYS_ALLOWED.includes(sectionId)) return true;
+  if (!allowedSections || allowedSections.length === 0) return true;
+  return allowedSections.includes(sectionId);
+}
+
 const navItems: NavItem[] = [
   { icon: LayoutDashboard, label: "Dashboard", id: "dashboard" },
   { icon: Package, label: "Productos", id: "products" },
@@ -39,12 +57,25 @@ interface SidebarProps {
   mobileOpen?: boolean;
   onMobileClose?: () => void;
   isAdmin?: boolean;
+  /** Secciones permitidas; vacío o nulo = acceso completo */
+  allowedSections?: string[] | null;
 }
 
-export function Sidebar({ activeItem, onItemChange, mobileOpen, onMobileClose, isAdmin }: SidebarProps) {
+export function Sidebar({
+  activeItem,
+  onItemChange,
+  mobileOpen,
+  onMobileClose,
+  isAdmin,
+  allowedSections,
+}: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const isMobile = useIsMobile();
-  const items = navItems.filter((item) => !item.adminOnly || isAdmin);
+
+  const items = navItems.filter((item) => {
+    if (item.adminOnly && !isAdmin) return false;
+    return isSectionAllowed(item.id, allowedSections, isAdmin);
+  });
 
   // Mobile overlay sidebar
   if (isMobile) {

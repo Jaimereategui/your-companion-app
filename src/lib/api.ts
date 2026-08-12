@@ -175,6 +175,8 @@ export interface User {
   lastName: string;
   email: string;
   role: string;
+  /** Secciones visibles. null o vacío = acceso completo. */
+  allowedSections?: string[] | null;
 }
 
 export interface AuthResponse {

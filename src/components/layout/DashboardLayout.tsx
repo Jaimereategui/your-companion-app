@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import { Sidebar } from "./Sidebar";
+import { useCallback, useEffect, useState } from "react";
+import { Sidebar, isSectionAllowed } from "./Sidebar";
 import { Header } from "./Header";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -11,7 +11,7 @@ import { AdminModule } from "@/components/admin/AdminModule";
 import { FormDraftProvider, useFormDraft } from "@/contexts/FormDraftContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { NavigationGuardDialog } from "./NavigationGuardDialog";
-import { Construction } from "lucide-react";
+import { Construction, Lock } from "lucide-react";
 
 // ─── Page metadata ────────────────────────────────────────────────────────────
 
@@ -65,6 +65,13 @@ function DashboardContent() {
   const { checkDirty } = useFormDraft();
   const { user }       = useAuth();
   const isAdmin        = user?.role === "admin";
+  const allowed        = user?.allowedSections;
+  const canSee         = (id: string) => isSectionAllowed(id, allowed, isAdmin);
+
+  // Si la sección inicial no está permitida, aterriza en el dashboard
+  useEffect(() => {
+    if (user && !canSee(activeItem)) setActiveItem("dashboard");
+  }, [user, activeItem]);
 
   const pageInfo = pageTitles[activeItem] ?? { title: "Dashboard", subtitle: "" };
 
@@ -112,6 +119,7 @@ function DashboardContent() {
         mobileOpen={mobileMenuOpen}
         onMobileClose={() => setMobileMenuOpen(false)}
         isAdmin={isAdmin}
+        allowedSections={allowed}
       />
 
       <main
@@ -133,21 +141,29 @@ function DashboardContent() {
            * Sections are mounted on first visit, then toggled with
            * display:none — React state is preserved across navigation.
            */}
-          <div style={{ display: activeItem === "ai-products" ? "block" : "none" }}>
-            {mounted.has("ai-products") && <AIProductsModule />}
-          </div>
+          {canSee("ai-products") && (
+            <div style={{ display: activeItem === "ai-products" ? "block" : "none" }}>
+              {mounted.has("ai-products") && <AIProductsModule />}
+            </div>
+          )}
 
-          <div style={{ display: activeItem === "products" ? "block" : "none" }}>
-            {mounted.has("products") && <ProductsModule />}
-          </div>
+          {canSee("products") && (
+            <div style={{ display: activeItem === "products" ? "block" : "none" }}>
+              {mounted.has("products") && <ProductsModule />}
+            </div>
+          )}
 
-          <div style={{ display: activeItem === "marketplaces" ? "block" : "none" }}>
-            {mounted.has("marketplaces") && <MarketplacesModule />}
-          </div>
+          {canSee("marketplaces") && (
+            <div style={{ display: activeItem === "marketplaces" ? "block" : "none" }}>
+              {mounted.has("marketplaces") && <MarketplacesModule />}
+            </div>
+          )}
 
-          <div style={{ display: activeItem === "analytics" ? "block" : "none" }}>
-            {mounted.has("analytics") && <AnalyticsModule />}
-          </div>
+          {canSee("analytics") && (
+            <div style={{ display: activeItem === "analytics" ? "block" : "none" }}>
+              {mounted.has("analytics") && <AnalyticsModule />}
+            </div>
+          )}
 
           {isAdmin && (
             <div style={{ display: activeItem === "admin" ? "block" : "none" }}>
@@ -155,10 +171,25 @@ function DashboardContent() {
             </div>
           )}
 
-          {/* Placeholder for sections not yet implemented */}
-          {(!IMPLEMENTED.includes(activeItem) || (activeItem === "admin" && !isAdmin)) && (
-            <ComingSoonSection section={activeItem} />
+          {/* Sección restringida para esta cuenta */}
+          {!canSee(activeItem) && (
+            <div className="flex flex-col items-center justify-center py-32 text-center">
+              <div className="w-20 h-20 rounded-2xl glass flex items-center justify-center mb-6 border border-border">
+                <Lock className="w-10 h-10 text-muted-foreground opacity-60" />
+              </div>
+              <h2 className="text-2xl font-bold mb-2">Sección no disponible</h2>
+              <p className="text-muted-foreground max-w-sm">
+                Tu cuenta no tiene acceso a esta sección. Si necesitas entrar, escríbele a tu
+                administrador.
+              </p>
+            </div>
           )}
+
+          {/* Placeholder for sections not yet implemented */}
+          {canSee(activeItem) &&
+            (!IMPLEMENTED.includes(activeItem) || (activeItem === "admin" && !isAdmin)) && (
+              <ComingSoonSection section={activeItem} />
+            )}
         </div>
       </main>
 

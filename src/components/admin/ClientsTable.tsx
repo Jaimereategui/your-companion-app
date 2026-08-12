@@ -3,13 +3,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { Building2, Settings2, Users } from "lucide-react";
+import { Building2, Settings2, Trash2, Users } from "lucide-react";
 
 interface ClientsTableProps {
   clients: AdminClient[];
   isLoading: boolean;
   isError: boolean;
   onManage: (client: AdminClient) => void;
+  onDelete: (client: AdminClient) => void;
+  currentUserId?: string;
 }
 
 const money = (n: number) =>
@@ -21,7 +23,14 @@ const STATUS_STYLES: Record<string, string> = {
   perdido: "bg-red-500/10 text-red-500 border-red-500/30",
 };
 
-export function ClientsTable({ clients, isLoading, isError, onManage }: ClientsTableProps) {
+export function ClientsTable({
+  clients,
+  isLoading,
+  isError,
+  onManage,
+  onDelete,
+  currentUserId,
+}: ClientsTableProps) {
   if (isLoading) {
     return (
       <div className="glass rounded-2xl overflow-hidden divide-y divide-border/50">
@@ -128,11 +137,27 @@ export function ClientsTable({ clients, isLoading, isError, onManage }: ClientsT
                     </p>
                   )}
                 </td>
-                <td className="px-4 py-3 text-right">
-                  <Button variant="outline" size="sm" onClick={() => onManage(c)}>
-                    <Settings2 className="w-3.5 h-3.5 mr-2" />
-                    Gestionar
-                  </Button>
+                <td className="px-4 py-3">
+                  <div className="flex items-center justify-end gap-1">
+                    <Button variant="outline" size="sm" onClick={() => onManage(c)}>
+                      <Settings2 className="w-3.5 h-3.5 mr-2" />
+                      Gestionar
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => onDelete(c)}
+                      disabled={c.id === currentUserId}
+                      title={
+                        c.id === currentUserId
+                          ? "No puedes eliminar tu propia cuenta"
+                          : "Eliminar cuenta"
+                      }
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -155,10 +180,22 @@ export function ClientsTable({ clients, isLoading, isError, onManage }: ClientsT
             </div>
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold tabular-nums">{money(c.stats.totalPaid)}</p>
-              <Button variant="outline" size="sm" onClick={() => onManage(c)}>
-                <Settings2 className="w-3.5 h-3.5 mr-2" />
-                Gestionar
-              </Button>
+              <div className="flex items-center gap-1">
+                <Button variant="outline" size="sm" onClick={() => onManage(c)}>
+                  <Settings2 className="w-3.5 h-3.5 mr-2" />
+                  Gestionar
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                  onClick={() => onDelete(c)}
+                  disabled={c.id === currentUserId}
+                  title="Eliminar cuenta"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           </div>
         ))}

@@ -34,9 +34,37 @@ export interface AdminClient {
   cellPhone?: string;
   role: string;
   isActive: boolean;
+  /** null o vacío = acceso completo */
+  allowedSections?: string[] | null;
   createdAt: string;
   profile: ClientProfile | null;
   stats: ClientStats;
+}
+
+/** Secciones que el superadmin puede conceder o restringir */
+export const APP_SECTIONS = [
+  { id: "dashboard", label: "Dashboard", always: true },
+  { id: "products", label: "Productos", always: false },
+  { id: "ai-products", label: "IA para Productos", always: false },
+  { id: "marketplaces", label: "Marketplaces", always: false },
+  { id: "analytics", label: "Analíticas", always: false },
+  { id: "settings", label: "Configuración", always: true },
+] as const;
+
+export interface CreateClientDto {
+  name: string;
+  lastName: string;
+  email: string;
+  password: string;
+  nameCompany?: string;
+  cellPhone?: string;
+  allowedSections?: string[];
+  clientType?: "agency" | "saas";
+}
+
+export interface UpdateAccessDto {
+  allowedSections?: string[];
+  isActive?: boolean;
 }
 
 export interface Payment {
@@ -89,6 +117,24 @@ export const adminApi = {
 
   /** Detalle de un cliente con su historial de pagos */
   getClient: (id: string) => apiRequest<ClientDetail>(`/admin/clients/${id}`, { method: 'GET' }),
+
+  /** Crea una cuenta con contraseña inicial y permisos de sección */
+  createClient: (dto: CreateClientDto) =>
+    apiRequest<AdminClient>('/admin/clients', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    }),
+
+  /** Define a qué secciones accede el usuario y si su cuenta está activa */
+  updateAccess: (id: string, dto: UpdateAccessDto) =>
+    apiRequest<AdminClient>(`/admin/clients/${id}/access`, {
+      method: 'PATCH',
+      body: JSON.stringify(dto),
+    }),
+
+  /** Elimina la cuenta y todos sus datos */
+  deleteClient: (id: string) =>
+    apiRequest<{ message: string }>(`/admin/clients/${id}`, { method: 'DELETE' }),
 
   /** Crea o actualiza el perfil comercial del cliente */
   updateProfile: (id: string, dto: UpdateClientProfileDto) =>

@@ -3,9 +3,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   adminApi,
   AdminClient,
+  APP_SECTIONS,
   CreatePaymentDto,
   UpdateClientProfileDto,
 } from "@/lib/admin-api";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,7 +31,9 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Loader2, Plus, Save, Trash2 } from "lucide-react";
+import { Loader2, Plus, Save, ShieldCheck, Trash2 } from "lucide-react";
+
+const RESTRICTABLE = APP_SECTIONS.filter((s) => !s.always);
 
 interface ClientDetailDialogProps {
   client: AdminClient | null;
@@ -56,6 +61,9 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
     method: "transferencia",
     paidAt: today(),
   });
+  const [sections, setSections] = useState<string[]>([]);
+  const [fullAccess, setFullAccess] = useState(true);
+  const [isActive, setIsActive] = useState(true);
 
   const { data: detailResult, isLoading } = useQuery({
     queryKey: ["admin-client", client?.id],
@@ -80,6 +88,11 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
       sheetCsvUrl: p?.sheetCsvUrl ?? "",
       notes: p?.notes ?? "",
     });
+
+    const current = detail?.allowedSections ?? client.allowedSections ?? [];
+    setSections(current ?? []);
+    setFullAccess(!current || current.length === 0);
+    setIsActive(detail?.isActive ?? client.isActive ?? true);
   }, [client, detail]);
 
   const saveProfile = useMutation({
@@ -131,6 +144,24 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
     onError: () => toast.error("Error al eliminar el pago"),
   });
 
+  const saveAccess = useMutation({
+    mutationFn: () =>
+      adminApi.updateAccess(client!.id, {
+        allowedSections: fullAccess ? [] : sections,
+        isActive,
+      }),
+    onSuccess: (res) => {
+      if (res.error) return toast.error(res.error);
+      toast.success("Permisos actualizados");
+      queryClient.invalidateQueries({ queryKey: ["admin-clients"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-client", client?.id] });
+    },
+    onError: () => toast.error("Error al guardar los permisos"),
+  });
+
+  const toggleSection = (id: string) =>
+    setSections((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
+
   const canAddPayment =
     payment.amount > 0 && payment.concept.trim().length > 0 && !addPayment.isPending;
 
@@ -143,8 +174,9 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
         </DialogHeader>
 
         <Tabs defaultValue="perfil">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="perfil">Perfil y facturación</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="perfil">Perfil</TabsTrigger>
+            <TabsTrigger value="accesos">Accesos</TabsTrigger>
             <TabsTrigger value="pagos">Pagos</TabsTrigger>
           </TabsList>
 
@@ -256,6 +288,76 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
                 <Save className="w-4 h-4 mr-2" />
               )}
               Guardar perfil
+            </Button>
+          </TabsContent>
+
+          {/* ── ACCESOS ────────────────────────────────────────── */}
+          <TabsContent value="accesos" className="space-y-5 pt-4">
+            <div className="flex items-center justify-between gap-4 p-4 rounded-xl border border-border">
+              <div>
+                <p className="font-medium text-sm">Cuenta activa</p>
+                <p className="text-xs text-muted-foreground">
+                  Al desactivarla, la persona conserva sus datos pero no podrá entrar.
+                </p>
+              </div>
+              <Switch checked={isActive} onCheckedChange={setIsActive} />
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-[#FCCB34]" />
+                <p className="font-medium text-sm">Secciones visibles</p>
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant={fullAccess ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setFullAccess(true)}
+                >
+                  Acceso completo
+                </Button>
+                <Button
+                  type="button"
+                  variant={!fullAccess ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setFullAccess(false)}
+                >
+                  Acceso limitado
+                </Button>
+              </div>
+
+              {!fullAccess && (
+                <div className="space-y-2 p-3 rounded-xl border border-border bg-secondary/20">
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Dashboard y Configuración siempre están disponibles. Marca lo demás que quieras
+                    habilitar para esta cuenta.
+                  </p>
+                  {RESTRICTABLE.map((section) => (
+                    <label key={section.id} className="flex items-center gap-3 py-1.5 cursor-pointer">
+                      <Checkbox
+                        checked={sections.includes(section.id)}
+                        onCheckedChange={() => toggleSection(section.id)}
+                      />
+                      <span className="text-sm">{section.label}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <Button
+              onClick={() => saveAccess.mutate()}
+              disabled={saveAccess.isPending}
+              className="w-full sm:w-auto"
+            >
+              {saveAccess.isPending ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4 mr-2" />
+              )}
+              Guardar permisos
             </Button>
           </TabsContent>
 
