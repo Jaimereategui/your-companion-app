@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { reportsApi } from "@/lib/admin-api";
+import { EmbeddedReport } from "./EmbeddedReport";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -77,6 +79,15 @@ function KpiCard({
 export function AnalyticsModule() {
   const [days, setDays] = useState(30);
 
+  // Reporte externo (AppScript/Looker) que el admin haya configurado
+  const { data: configRes } = useQuery({
+    queryKey: ["report-config"],
+    queryFn: () => reportsApi.getConfig(),
+    staleTime: 5 * 60_000,
+  });
+  const embedUrl = configRes?.data?.embedUrl ?? null;
+  const embedTitle = configRes?.data?.embedTitle || "Reporte detallado";
+
   const from = new Date(Date.now() - (days - 1) * 24 * 3600 * 1000).toISOString().slice(0, 10);
   const to = new Date().toISOString().slice(0, 10);
 
@@ -114,7 +125,7 @@ export function AnalyticsModule() {
   const chartData = report.byDay.map((d) => ({ ...d, label: dayLabel(d.date) }));
   const hasData = report.totals.orders > 0 || report.totals.sales > 0;
 
-  return (
+  const nativeReport = (
     <div className="space-y-6">
       {/* Selector de rango */}
       <div className="flex items-center gap-2">
@@ -284,5 +295,23 @@ export function AnalyticsModule() {
         )}
       </div>
     </div>
+  );
+
+  // Sin reporte externo, se muestra solo el nativo
+  if (!embedUrl) return nativeReport;
+
+  return (
+    <Tabs defaultValue="externo" className="space-y-4">
+      <TabsList>
+        <TabsTrigger value="externo">{embedTitle}</TabsTrigger>
+        <TabsTrigger value="plataforma">Ventas en la plataforma</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="externo">
+        <EmbeddedReport url={embedUrl} title={embedTitle} />
+      </TabsContent>
+
+      <TabsContent value="plataforma">{nativeReport}</TabsContent>
+    </Tabs>
   );
 }

@@ -31,7 +31,8 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Copy, KeyRound, Loader2, Plus, Save, ShieldCheck, Trash2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Copy, KeyRound, Loader2, Plus, Save, ShieldCheck, Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const RESTRICTABLE = APP_SECTIONS.filter((s) => !s.always);
 
@@ -65,6 +66,7 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
   const [fullAccess, setFullAccess] = useState(true);
   const [isActive, setIsActive] = useState(true);
   const [newPassword, setNewPassword] = useState<string | null>(null);
+  const [embedCheck, setEmbedCheck] = useState<{ embeddable: boolean; reason: string | null } | null>(null);
 
   const { data: detailResult, isLoading } = useQuery({
     queryKey: ["admin-client", client?.id],
@@ -87,6 +89,8 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
       contactName: p?.contactName ?? `${client.name} ${client.lastName}`.trim(),
       contactPhone: p?.contactPhone ?? client.cellPhone ?? "",
       sheetCsvUrl: p?.sheetCsvUrl ?? "",
+      reportEmbedUrl: p?.reportEmbedUrl ?? "",
+      reportEmbedTitle: p?.reportEmbedTitle ?? "",
       notes: p?.notes ?? "",
     });
 
@@ -95,6 +99,7 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
     setFullAccess(!current || current.length === 0);
     setIsActive(detail?.isActive ?? client.isActive ?? true);
     setNewPassword(null);
+    setEmbedCheck(null);
   }, [client, detail]);
 
   const saveProfile = useMutation({
@@ -159,6 +164,15 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
       queryClient.invalidateQueries({ queryKey: ["admin-client", client?.id] });
     },
     onError: () => toast.error("Error al guardar los permisos"),
+  });
+
+  const checkEmbed = useMutation({
+    mutationFn: () => adminApi.checkEmbeddable(profile.reportEmbedUrl!),
+    onSuccess: (res) => {
+      if (res.error) return toast.error(res.error);
+      setEmbedCheck(res.data!);
+    },
+    onError: () => toast.error("No se pudo comprobar la URL"),
   });
 
   const resetPassword = useMutation({
@@ -281,6 +295,66 @@ export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps)
                 En el Sheet: Archivo → Compartir → Publicar en la web → CSV. El reporte del cliente sumará estos
                 datos a las ventas de sus marketplaces.
               </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Reporte externo embebido (AppScript, Looker Studio…)</Label>
+              <div className="flex gap-2">
+                <Input
+                  value={profile.reportEmbedUrl ?? ""}
+                  onChange={(e) => {
+                    setProfile({ ...profile, reportEmbedUrl: e.target.value });
+                    setEmbedCheck(null);
+                  }}
+                  placeholder="https://script.google.com/macros/s/.../exec"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => checkEmbed.mutate()}
+                  disabled={!profile.reportEmbedUrl || checkEmbed.isPending}
+                  title="Comprobar si se puede mostrar dentro de la app"
+                >
+                  {checkEmbed.isPending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    "Probar"
+                  )}
+                </Button>
+              </div>
+              {embedCheck && (
+                <p
+                  className={cn(
+                    "text-xs flex items-start gap-1.5",
+                    embedCheck.embeddable ? "text-green-500" : "text-yellow-500"
+                  )}
+                >
+                  {embedCheck.embeddable ? (
+                    <>
+                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                      Se puede mostrar dentro de la app.
+                    </>
+                  ) : (
+                    <>
+                      <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                      {embedCheck.reason}
+                    </>
+                  )}
+                </p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                El cliente verá este reporte dentro de sus Analíticas, junto al reporte de ventas
+                de la plataforma.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Título de esa pestaña</Label>
+              <Input
+                value={profile.reportEmbedTitle ?? ""}
+                onChange={(e) => setProfile({ ...profile, reportEmbedTitle: e.target.value })}
+                placeholder="Reporte de ventas"
+              />
             </div>
 
             <div className="space-y-2">

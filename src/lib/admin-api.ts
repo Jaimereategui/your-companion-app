@@ -14,6 +14,8 @@ export interface ClientProfile {
   contactName?: string;
   contactPhone?: string;
   sheetCsvUrl?: string;
+  reportEmbedUrl?: string;
+  reportEmbedTitle?: string;
   notes?: string;
 }
 
@@ -164,6 +166,16 @@ export const adminApi = {
   /** Panel financiero */
   getFinanceSummary: () =>
     apiRequest<FinanceSummary>('/admin/finance/summary', { method: 'GET' }),
+
+  /** Comprueba si una URL se puede mostrar embebida antes de guardarla */
+  checkEmbeddable: (url: string) =>
+    apiRequest<{
+      embeddable: boolean;
+      status: number | null;
+      xFrameOptions: string | null;
+      frameAncestors: string | null;
+      reason: string | null;
+    }>(`/admin/embed-check?url=${encodeURIComponent(url)}`, { method: 'GET' }),
 };
 
 // ─────────────────────────────────────────────
@@ -178,7 +190,15 @@ export interface SalesReport {
   sources: { marketplaces: boolean; sheets: boolean; sheetError: string | null };
 }
 
+export interface ReportConfig {
+  embedUrl: string | null;
+  embedTitle: string;
+}
+
 export const reportsApi = {
+  /** Reporte externo que el admin configuró para este usuario */
+  getConfig: () => apiRequest<ReportConfig>('/reports/config', { method: 'GET' }),
+
   getSales: (from?: string, to?: string) => {
     const params = new URLSearchParams();
     if (from) params.set('from', from);
