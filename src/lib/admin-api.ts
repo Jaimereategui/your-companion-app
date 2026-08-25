@@ -54,6 +54,8 @@ export const APP_SECTIONS = [
 ] as const;
 
 export interface CreateClientDto {
+  /** "contador" solo accede a finanzas y facturación */
+  role?: "user" | "contador";
   name: string;
   lastName: string;
   email: string;

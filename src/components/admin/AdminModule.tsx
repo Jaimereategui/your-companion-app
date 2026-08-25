@@ -7,6 +7,7 @@ import { ClientDetailDialog } from "./ClientDetailDialog";
 import { CreateClientDialog } from "./CreateClientDialog";
 import { DeleteClientDialog } from "./DeleteClientDialog";
 import { CrmModule } from "@/components/crm/CrmModule";
+import { BillingModule } from "./BillingModule";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,6 +16,7 @@ import { Search, UserPlus } from "lucide-react";
 
 export function AdminModule() {
   const { user } = useAuth();
+  const isAccountant = user?.role === "contador";
   const [search, setSearch] = useState("");
   const [manageTarget, setManageTarget] = useState<AdminClient | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AdminClient | null>(null);
@@ -34,6 +36,7 @@ export function AdminModule() {
     queryKey: ["admin-clients"],
     queryFn: () => adminApi.getClients(),
     staleTime: 30_000,
+    enabled: !isAccountant,
   });
 
   const clients = clientsResult?.data ?? [];
@@ -48,12 +51,17 @@ export function AdminModule() {
 
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="finanzas">
+      <Tabs defaultValue={isAccountant ? "facturacion" : "finanzas"}>
         <TabsList>
           <TabsTrigger value="finanzas">Finanzas</TabsTrigger>
-          <TabsTrigger value="clientes">Clientes ({clients.length})</TabsTrigger>
-          <TabsTrigger value="crm">CRM</TabsTrigger>
+          <TabsTrigger value="facturacion">Facturación</TabsTrigger>
+          {!isAccountant && <TabsTrigger value="clientes">Clientes ({clients.length})</TabsTrigger>}
+          {!isAccountant && <TabsTrigger value="crm">CRM</TabsTrigger>}
         </TabsList>
+
+        <TabsContent value="facturacion" className="pt-6">
+          <BillingModule />
+        </TabsContent>
 
         <TabsContent value="finanzas" className="pt-6">
           <FinanceOverview summary={financeResult?.data} isLoading={loadingFinance} />

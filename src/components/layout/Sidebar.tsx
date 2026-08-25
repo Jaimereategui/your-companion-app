@@ -8,6 +8,7 @@ import {
   Store,
   BarChart3,
   ShieldCheck,
+  Wallet,
   ChevronLeft,
   ChevronRight,
   X
@@ -57,6 +58,8 @@ interface SidebarProps {
   mobileOpen?: boolean;
   onMobileClose?: () => void;
   isAdmin?: boolean;
+  /** El contador entra a la misma sección, pero recortada */
+  isAccountant?: boolean;
   /** Secciones permitidas; vacío o nulo = acceso completo */
   allowedSections?: string[] | null;
 }
@@ -67,15 +70,23 @@ export function Sidebar({
   mobileOpen,
   onMobileClose,
   isAdmin,
+  isAccountant,
   allowedSections,
 }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const isMobile = useIsMobile();
 
-  const items = navItems.filter((item) => {
-    if (item.adminOnly && !isAdmin) return false;
-    return isSectionAllowed(item.id, allowedSections, isAdmin);
-  });
+  const items = navItems
+    .filter((item) => {
+      if (item.adminOnly && !isAdmin) return false;
+      return isSectionAllowed(item.id, allowedSections, isAdmin);
+    })
+    // Para el contador la sección se llama por lo que realmente hace
+    .map((item) =>
+      item.id === "admin" && isAccountant
+        ? { ...item, icon: Wallet, label: "Finanzas" }
+        : item
+    );
 
   // Mobile overlay sidebar
   if (isMobile) {

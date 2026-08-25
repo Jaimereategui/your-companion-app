@@ -22,6 +22,7 @@ const pageTitles: Record<string, { title: string; subtitle: string }> = {
   marketplaces:  { title: "Marketplaces",      subtitle: "Conecta y sincroniza tus canales de venta" },
   analytics:     { title: "Analíticas",        subtitle: "Tus ventas y el rendimiento de tus canales" },
   admin:         { title: "Superadmin",        subtitle: "Clientes, pagos y control financiero" },
+  // El contador ve la misma sección con otro encabezado
   settings:      { title: "Configuración",     subtitle: "Ajustes de tu cuenta y preferencias" },
 };
 
@@ -65,8 +66,11 @@ function DashboardContent() {
   const { checkDirty } = useFormDraft();
   const { user }       = useAuth();
   const isAdmin        = user?.role === "admin";
+  const isAccountant   = user?.role === "contador";
+  // El contador entra a la misma sección, que ya se recorta por su rol
+  const canSeeAdmin    = isAdmin || isAccountant;
   const allowed        = user?.allowedSections;
-  const canSee         = (id: string) => isSectionAllowed(id, allowed, isAdmin);
+  const canSee         = (id: string) => isSectionAllowed(id, allowed, isAdmin || isAccountant);
 
   // Si la sección inicial no está permitida, aterriza en el dashboard
   useEffect(() => {
@@ -118,7 +122,8 @@ function DashboardContent() {
         onItemChange={handleSectionChange}
         mobileOpen={mobileMenuOpen}
         onMobileClose={() => setMobileMenuOpen(false)}
-        isAdmin={isAdmin}
+        isAdmin={canSeeAdmin}
+        isAccountant={isAccountant}
         allowedSections={allowed}
       />
 
@@ -165,7 +170,7 @@ function DashboardContent() {
             </div>
           )}
 
-          {isAdmin && (
+          {canSeeAdmin && (
             <div style={{ display: activeItem === "admin" ? "block" : "none" }}>
               {mounted.has("admin") && <AdminModule />}
             </div>
@@ -187,7 +192,7 @@ function DashboardContent() {
 
           {/* Placeholder for sections not yet implemented */}
           {canSee(activeItem) &&
-            (!IMPLEMENTED.includes(activeItem) || (activeItem === "admin" && !isAdmin)) && (
+            (!IMPLEMENTED.includes(activeItem) || (activeItem === "admin" && !canSeeAdmin)) && (
               <ComingSoonSection section={activeItem} />
             )}
         </div>

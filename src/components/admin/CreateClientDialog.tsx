@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, RefreshCw, UserPlus } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface CreateClientDialogProps {
   open: boolean;
@@ -39,6 +40,7 @@ function generatePassword() {
 }
 
 const EMPTY: CreateClientDto = {
+  role: "user",
   name: "",
   lastName: "",
   email: "",
@@ -177,6 +179,26 @@ export function CreateClientDialog({ open, onClose }: CreateClientDialogProps) {
             </p>
           </div>
 
+          <div className="space-y-2">
+            <Label>Tipo de cuenta</Label>
+            <Select
+              value={form.role ?? "user"}
+              onValueChange={(v) => setForm({ ...form, role: v as "user" | "contador" })}
+            >
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="user">Cliente</SelectItem>
+                <SelectItem value="contador">Contador (solo finanzas y facturación)</SelectItem>
+              </SelectContent>
+            </Select>
+            {form.role === "contador" && (
+              <p className="text-xs text-muted-foreground">
+                Verá los ingresos y a qué clientes facturar. No puede gestionar cuentas, productos
+                ni el CRM.
+              </p>
+            )}
+          </div>
+
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Empresa (opcional)</Label>
@@ -201,8 +223,8 @@ export function CreateClientDialog({ open, onClose }: CreateClientDialogProps) {
             </div>
           </div>
 
-          {/* Permisos */}
-          <div className="space-y-3 pt-2 border-t border-border">
+          {/* Permisos (no aplican al contador: su rol ya los define) */}
+          <div className={cn("space-y-3 pt-2 border-t border-border", form.role === "contador" && "hidden")}>
             <Label>¿Qué podrá ver?</Label>
 
             <div className="flex gap-2">
