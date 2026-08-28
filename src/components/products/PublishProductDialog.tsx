@@ -19,6 +19,7 @@ import { toast } from "sonner";
 // Solo Mercado Libre tiene sincronización real por ahora
 const PUBLISHABLE = [
   { id: "mercadolibre", name: "MercadoLibre", logo: "/mercadolibre.png" },
+  { id: "falabella",    name: "Falabella",    logo: "/Falabella.png" },
 ];
 
 interface PublishProductDialogProps {
