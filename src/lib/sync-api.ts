@@ -57,6 +57,14 @@ export const syncApi = {
   getConnections: () =>
     apiRequest<MarketplaceConnection[]>('/sync/connections', { method: 'GET' }),
 
+  /** Conecta Yavendió con la API key que el usuario pega. La clave viaja
+   *  al backend y nunca vuelve: solo se responde el nombre de la empresa. */
+  connectYavendio: (apiKey: string) =>
+    apiRequest<{ marketplace: string; nickname: string }>('/sync/yavendio/connect', {
+      method: 'POST',
+      body: JSON.stringify({ apiKey }),
+    }),
+
   /** URL de autorización OAuth de Mercado Libre */
   getMeliAuthUrl: () =>
     apiRequest<{ authUrl: string }>('/sync/mercadolibre/auth-url', { method: 'GET' }),

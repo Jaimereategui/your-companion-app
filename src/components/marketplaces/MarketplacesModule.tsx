@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { syncApi, MarketplaceConnection } from "@/lib/sync-api";
 import { ConnectionCard } from "./ConnectionCard";
+import { ConnectYavendioDialog } from "./ConnectYavendioDialog";
 import { ListingsTable } from "./ListingsTable";
 import { toast } from "sonner";
 import {
@@ -20,7 +21,9 @@ import {
 export interface MarketplaceDef {
   id: string;
   name: string;
-  logo: string;
+  /** PNG en /public. Si falta, la tarjeta dibuja `logoText`. */
+  logo?: string;
+  logoText?: string;
   imgClass?: string;
   available: boolean;
 }
@@ -28,6 +31,7 @@ export interface MarketplaceDef {
 // Mismos logos PNG de /public que usa MarketplaceSelector
 const MARKETPLACES: MarketplaceDef[] = [
   { id: "mercadolibre", name: "MercadoLibre", logo: "/mercadolibre.png", available: true },
+  { id: "yavendio",     name: "Yavendió",     logoText: "yavendió",      available: true },
   { id: "shopify",      name: "Shopify",      logo: "/shopify.png",      available: false },
   { id: "amazon",       name: "Amazon",       logo: "/amazon.png",       imgClass: "scale-[1.7]", available: false },
 ];
@@ -37,6 +41,7 @@ const MARKETPLACES: MarketplaceDef[] = [
 export function MarketplacesModule() {
   const queryClient = useQueryClient();
   const [disconnectTarget, setDisconnectTarget] = useState<MarketplaceConnection | null>(null);
+  const [yavendioOpen, setYavendioOpen] = useState(false);
 
   // ── Resultado del flujo OAuth (query params que deja el callback) ──────────
   useEffect(() => {
@@ -108,8 +113,17 @@ export function MarketplacesModule() {
   });
 
   const handleConnect = (marketplaceId: string) => {
+    // Mercado Libre sale a su pantalla de autorización (OAuth);
+    // Yavendió se conecta pegando una API key aquí mismo.
     if (marketplaceId === "mercadolibre") connectMutation.mutate();
+    if (marketplaceId === "yavendio") setYavendioOpen(true);
   };
+
+  // El texto del aviso de desconexión depende del canal.
+  const disconnectName =
+    MARKETPLACES.find((m) => m.id === disconnectTarget?.marketplace)?.name ??
+    disconnectTarget?.marketplace ??
+    "";
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
@@ -161,14 +175,14 @@ export function MarketplacesModule() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>¿Desconectar Mercado Libre?</AlertDialogTitle>
+            <AlertDialogTitle>¿Desconectar {disconnectName}?</AlertDialogTitle>
             <AlertDialogDescription>
               La cuenta{" "}
               <span className="font-semibold">
                 {disconnectTarget?.externalNickname || disconnectTarget?.externalUserId}
               </span>{" "}
-              dejará de sincronizarse. Tus publicaciones existentes en Mercado Libre no
-              se eliminan, pero Synkro ya no podrá actualizarlas ni recibir sus ventas.
+              dejará de sincronizarse. Lo que ya exista en {disconnectName} no se elimina,
+              pero Synkro ya no podrá actualizarlo ni recibir sus datos.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -184,6 +198,8 @@ export function MarketplacesModule() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ConnectYavendioDialog open={yavendioOpen} onOpenChange={setYavendioOpen} />
     </div>
   );
 }

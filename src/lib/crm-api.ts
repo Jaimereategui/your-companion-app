@@ -64,6 +64,15 @@ export interface ImportResult {
   }[];
 }
 
+export interface YavendioImportResult {
+  total: number;
+  created: number;
+  updated: number;
+  skipped: number;
+  byStage: Record<string, number>;
+  sample: { name: string; stage: LeadStage; action: string }[];
+}
+
 export const crmApi = {
   getLeads: (search?: string, stage?: string) => {
     const params = new URLSearchParams();
@@ -89,5 +98,14 @@ export const crmApi = {
     apiRequest<ImportResult>('/crm/import', {
       method: 'POST',
       body: JSON.stringify({ csvUrl, dryRun }),
+    }),
+
+  /** Trae las conversaciones de la cuenta de Yavendió conectada.
+   *  dryRun=true solo cuenta; skipEmpty deja fuera las que nunca
+   *  tuvieron un mensaje. */
+  importYavendio: (dryRun: boolean, skipEmpty: boolean) =>
+    apiRequest<YavendioImportResult>('/crm/import/yavendio', {
+      method: 'POST',
+      body: JSON.stringify({ dryRun, skipEmpty }),
     }),
 };

@@ -36,11 +36,18 @@ export function ConnectionCard({
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="w-16 h-11 md:w-20 md:h-12 rounded-[8px] flex items-center justify-center bg-transparent dark:bg-[#EAEAEA] px-2 py-1 shrink-0 overflow-hidden">
-            <img
-              src={marketplace.logo}
-              alt={marketplace.name}
-              className={cn("w-full h-full object-contain", marketplace.imgClass)}
-            />
+            {marketplace.logo ? (
+              <img
+                src={marketplace.logo}
+                alt={marketplace.name}
+                className={cn("w-full h-full object-contain", marketplace.imgClass)}
+              />
+            ) : (
+              // Canales sin logo PNG: se dibuja el nombre corto en su lugar.
+              <span className="text-[13px] md:text-sm font-bold tracking-tight text-[#111]">
+                {marketplace.logoText ?? marketplace.name}
+              </span>
+            )}
           </div>
           <div>
             <p className="font-semibold text-sm md:text-base">{marketplace.name}</p>

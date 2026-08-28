@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { crmApi, Lead, LEAD_STAGES, LeadStage } from "@/lib/crm-api";
 import { LeadDialog } from "./LeadDialog";
 import { ImportLeadsDialog } from "./ImportLeadsDialog";
+import { ImportYavendioDialog } from "./ImportYavendioDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { Mail, Phone, Search, Table2, TrendingUp, UserPlus, Users } from "lucide-react";
+import { Mail, MessageCircle, Phone, Search, Table2, TrendingUp, UserPlus, Users } from "lucide-react";
 
 const money = (n: number) =>
   `S/ ${Number(n || 0).toLocaleString("es-PE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -29,6 +30,7 @@ export function CrmModule() {
   const [stageFilter, setStageFilter] = useState<string>("todas");
   const [editing, setEditing] = useState<Lead | "new" | null>(null);
   const [importOpen, setImportOpen] = useState(false);
+  const [yavendioOpen, setYavendioOpen] = useState(false);
 
   const { data: summaryRes, isLoading: loadingSummary } = useQuery({
     queryKey: ["crm-summary"],
@@ -165,7 +167,11 @@ export function CrmModule() {
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setImportOpen(true)}>
             <Table2 className="w-4 h-4 mr-2" />
-            Importar
+            Importar CSV
+          </Button>
+          <Button variant="outline" onClick={() => setYavendioOpen(true)}>
+            <MessageCircle className="w-4 h-4 mr-2" />
+            Yavendió
           </Button>
           <Button onClick={() => setEditing("new")}>
             <UserPlus className="w-4 h-4 mr-2" />
@@ -307,6 +313,7 @@ export function CrmModule() {
 
       <LeadDialog lead={editing} onClose={() => setEditing(null)} />
       <ImportLeadsDialog open={importOpen} onClose={() => setImportOpen(false)} />
+      <ImportYavendioDialog open={yavendioOpen} onClose={() => setYavendioOpen(false)} />
     </div>
   );
 }
