@@ -65,6 +65,13 @@ export const syncApi = {
       body: JSON.stringify({ apiKey }),
     }),
 
+  /** Conecta Falabella con el UserID (correo) y la API key del Seller Center. */
+  connectFalabella: (userId: string, apiKey: string) =>
+    apiRequest<{ marketplace: string; nickname: string }>('/sync/falabella/connect', {
+      method: 'POST',
+      body: JSON.stringify({ userId, apiKey }),
+    }),
+
   /** URL de autorización OAuth de Mercado Libre */
   getMeliAuthUrl: () =>
     apiRequest<{ authUrl: string }>('/sync/mercadolibre/auth-url', { method: 'GET' }),

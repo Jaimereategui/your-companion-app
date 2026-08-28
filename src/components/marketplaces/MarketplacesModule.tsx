@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { syncApi, MarketplaceConnection } from "@/lib/sync-api";
 import { ConnectionCard } from "./ConnectionCard";
 import { ConnectYavendioDialog } from "./ConnectYavendioDialog";
+import { ConnectFalabellaDialog } from "./ConnectFalabellaDialog";
 import { ListingsTable } from "./ListingsTable";
 import { toast } from "sonner";
 import {
@@ -32,6 +33,7 @@ export interface MarketplaceDef {
 const MARKETPLACES: MarketplaceDef[] = [
   { id: "mercadolibre", name: "MercadoLibre", logo: "/mercadolibre.png", available: true },
   { id: "yavendio",     name: "Yavendió",     logoText: "yavendió",      available: true },
+  { id: "falabella",    name: "Falabella",    logo: "/Falabella.png",    available: true },
   { id: "shopify",      name: "Shopify",      logo: "/shopify.png",      available: false },
   { id: "amazon",       name: "Amazon",       logo: "/amazon.png",       imgClass: "scale-[1.7]", available: false },
 ];
@@ -42,6 +44,7 @@ export function MarketplacesModule() {
   const queryClient = useQueryClient();
   const [disconnectTarget, setDisconnectTarget] = useState<MarketplaceConnection | null>(null);
   const [yavendioOpen, setYavendioOpen] = useState(false);
+  const [falabellaOpen, setFalabellaOpen] = useState(false);
 
   // ── Resultado del flujo OAuth (query params que deja el callback) ──────────
   useEffect(() => {
@@ -117,6 +120,7 @@ export function MarketplacesModule() {
     // Yavendió se conecta pegando una API key aquí mismo.
     if (marketplaceId === "mercadolibre") connectMutation.mutate();
     if (marketplaceId === "yavendio") setYavendioOpen(true);
+    if (marketplaceId === "falabella") setFalabellaOpen(true);
   };
 
   // El texto del aviso de desconexión depende del canal.
@@ -200,6 +204,7 @@ export function MarketplacesModule() {
       </AlertDialog>
 
       <ConnectYavendioDialog open={yavendioOpen} onOpenChange={setYavendioOpen} />
+      <ConnectFalabellaDialog open={falabellaOpen} onOpenChange={setFalabellaOpen} />
     </div>
   );
 }
