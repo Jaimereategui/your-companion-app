@@ -1,11 +1,16 @@
 import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Bell,
   CheckCheck,
   LogOut,
   Menu,
+  AlertTriangle,
+  Link2Off,
   Package,
+  ShoppingCart,
   Sparkles,
+  Upload,
   User,
   X,
 } from "lucide-react";
@@ -30,49 +35,30 @@ import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { ProfileDialog } from "./ProfileDialog";
+import {
+  AppNotification,
+  notificationsApi,
+  tiempoRelativo,
+} from "@/lib/notifications-api";
 
-// ─── Notification types ───────────────────────────────────────────────────────
-
-interface AppNotification {
-  id: string;
-  type: "ai" | "product" | "system";
-  title: string;
-  body: string;
-  time: string;
-  read: boolean;
-}
-
-const INITIAL_NOTIFICATIONS: AppNotification[] = [
-  {
-    id: "1",
-    type: "ai",
-    title: "IA generó contenido",
-    body: "Se optimizaron los campos de 'Zapatillas Running Pro' para MercadoLibre y Amazon.",
-    time: "hace 5 min",
-    read: false,
-  },
-  {
-    id: "2",
-    type: "product",
-    title: "Carga masiva completada",
-    body: "12 productos fueron procesados exitosamente desde tu último archivo Excel.",
-    time: "hace 32 min",
-    read: false,
-  },
-  {
-    id: "3",
-    type: "system",
-    title: "Bienvenido a Synkro AI",
-    body: "Tu cuenta está lista. Empieza generando contenido con IA para tus productos.",
-    time: "hace 1 h",
-    read: true,
-  },
-];
+// ─── Iconos por tipo de aviso ───────────────────────────────────────────
 
 const notifIcon: Record<AppNotification["type"], React.ReactNode> = {
-  ai:      <Sparkles className="w-4 h-4 text-accent" />,
-  product: <Package className="w-4 h-4 text-primary" />,
-  system:  <Bell className="w-4 h-4 text-muted-foreground" />,
+  "sale":          <ShoppingCart className="w-4 h-4 text-green-500" />,
+  "publish":       <Package className="w-4 h-4 text-primary" />,
+  "publish-error": <AlertTriangle className="w-4 h-4 text-destructive" />,
+  "connection":    <Link2Off className="w-4 h-4 text-destructive" />,
+  "low-stock":     <AlertTriangle className="w-4 h-4 text-amber-500" />,
+  "import":        <Upload className="w-4 h-4 text-primary" />,
+  "system":        <Bell className="w-4 h-4 text-muted-foreground" />,
+};
+
+/** Fondo del icono según la gravedad del aviso. */
+const notifTone: Record<AppNotification["severity"], string> = {
+  info:    "bg-secondary",
+  success: "bg-green-500/10",
+  warning: "bg-amber-500/10",
+  error:   "bg-destructive/10",
 };
 
 // ─── Props ────────────────────────────────────────────────────────────────────
@@ -88,17 +74,41 @@ interface HeaderProps {
 
 export function Header({ title, subtitle, onMenuClick, showMenuButton }: HeaderProps) {
   const { user, logout } = useAuth();
-  const [notifications, setNotifications] = useState<AppNotification[]>(INITIAL_NOTIFICATIONS);
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const queryClient = useQueryClient();
 
-  const unread = notifications.filter((n) => !n.read).length;
+  // Los avisos vienen del servidor. Se refrescan solos cada minuto para que
+  // una venta o un fallo de publicación aparezcan sin recargar la página.
+  const { data: notifResult, isLoading: loadingNotifs } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: () => notificationsApi.list(),
+    refetchInterval: 60_000,
+    staleTime: 30_000,
+  });
 
-  const markAllRead = () =>
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  const notifications: AppNotification[] = notifResult?.data?.items ?? [];
+  const unread = notifResult?.data?.unread ?? 0;
 
-  const dismissNotif = (id: string) =>
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  const refrescar = () => queryClient.invalidateQueries({ queryKey: ["notifications"] });
+
+  const markAllReadMutation = useMutation({
+    mutationFn: () => notificationsApi.markAllRead(),
+    onSuccess: refrescar,
+  });
+
+  const dismissMutation = useMutation({
+    mutationFn: (id: string) => notificationsApi.remove(id),
+    onSuccess: refrescar,
+  });
+
+  const markReadMutation = useMutation({
+    mutationFn: (id: string) => notificationsApi.markRead(id),
+    onSuccess: refrescar,
+  });
+
+  const markAllRead = () => markAllReadMutation.mutate();
+  const dismissNotif = (id: string) => dismissMutation.mutate(id);
 
   const handleLogout = async () => {
     await logout();
@@ -150,7 +160,7 @@ export function Header({ title, subtitle, onMenuClick, showMenuButton }: HeaderP
                 <Bell className="w-4 h-4 md:w-5 md:h-5" />
                 {unread > 0 && (
                   <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground flex items-center justify-center">
-                    {unread}
+                    {unread > 9 ? "9+" : unread}
                   </span>
                 )}
               </Button>
@@ -177,10 +187,17 @@ export function Header({ title, subtitle, onMenuClick, showMenuButton }: HeaderP
               </div>
 
               {/* List */}
-              {notifications.length === 0 ? (
+              {loadingNotifs ? (
+                <div className="py-10 text-center">
+                  <p className="text-sm text-muted-foreground">Cargando…</p>
+                </div>
+              ) : notifications.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center px-4">
                   <Bell className="w-8 h-8 text-muted-foreground opacity-30 mb-3" />
                   <p className="text-sm font-medium text-muted-foreground">Sin notificaciones</p>
+                  <p className="text-xs text-muted-foreground/70 mt-1">
+                    Aquí aparecerán tus ventas, publicaciones y avisos de tus canales.
+                  </p>
                 </div>
               ) : (
                 <ScrollArea className="max-h-80">
@@ -188,18 +205,17 @@ export function Header({ title, subtitle, onMenuClick, showMenuButton }: HeaderP
                     {notifications.map((notif) => (
                       <div
                         key={notif.id}
+                        onClick={() => !notif.read && markReadMutation.mutate(notif.id)}
                         className={cn(
                           "flex gap-3 px-4 py-3 hover:bg-secondary/30 transition-colors group",
-                          !notif.read && "bg-primary/5"
+                          !notif.read && "bg-primary/5 cursor-pointer"
                         )}
                       >
                         {/* Icon */}
                         <div
                           className={cn(
                             "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5",
-                            notif.type === "ai"      && "bg-accent/10",
-                            notif.type === "product" && "bg-primary/10",
-                            notif.type === "system"  && "bg-secondary"
+                            notifTone[notif.severity]
                           )}
                         >
                           {notifIcon[notif.type]}
@@ -212,7 +228,7 @@ export function Header({ title, subtitle, onMenuClick, showMenuButton }: HeaderP
                               {notif.title}
                             </p>
                             <button
-                              onClick={() => dismissNotif(notif.id)}
+                              onClick={(e) => { e.stopPropagation(); dismissNotif(notif.id); }}
                               className="opacity-0 group-hover:opacity-100 shrink-0 text-muted-foreground hover:text-foreground transition-all"
                             >
                               <X className="w-3.5 h-3.5" />
@@ -222,7 +238,8 @@ export function Header({ title, subtitle, onMenuClick, showMenuButton }: HeaderP
                             {notif.body}
                           </p>
                           <p className="text-[10px] text-muted-foreground/60 mt-1.5">
-                            {notif.time}
+                            {tiempoRelativo(notif.createdAt)}
+                            {notif.marketplace && ` · ${notif.marketplace}`}
                           </p>
                         </div>
 
