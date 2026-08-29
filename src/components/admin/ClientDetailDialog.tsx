@@ -3,7 +3,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   adminApi,
   AdminClient,
-  APP_SECTIONS,
   CreatePaymentDto,
   UpdateClientProfileDto,
 } from "@/lib/admin-api";
@@ -33,8 +32,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { AlertTriangle, CheckCircle2, Copy, KeyRound, Loader2, Plus, Save, ShieldCheck, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const RESTRICTABLE = APP_SECTIONS.filter((s) => !s.always);
+import { useRestrictableSections } from "@/hooks/use-app-sections";
 
 interface ClientDetailDialogProps {
   client: AdminClient | null;
@@ -50,6 +48,7 @@ const money = (n: number | string, currency = "PEN") =>
 const today = () => new Date().toISOString().slice(0, 10);
 
 export function ClientDetailDialog({ client, onClose }: ClientDetailDialogProps) {
+  const { secciones: RESTRICTABLE } = useRestrictableSections();
   const queryClient = useQueryClient();
   const open = client !== null;
 

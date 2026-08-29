@@ -43,15 +43,18 @@ export interface AdminClient {
   stats: ClientStats;
 }
 
-/** Secciones que el superadmin puede conceder o restringir */
-export const APP_SECTIONS = [
-  { id: "dashboard", label: "Dashboard", always: true },
-  { id: "products", label: "Productos", always: false },
-  { id: "ai-products", label: "IA para Productos", always: false },
-  { id: "marketplaces", label: "Marketplaces", always: false },
-  { id: "analytics", label: "Analíticas", always: false },
-  { id: "settings", label: "Configuración", always: true },
-] as const;
+/**
+ * Secciones que el superadmin puede conceder o restringir.
+ *
+ * La lista NO se escribe aquí: se pide al servidor, que es donde vive la
+ * única definición. Así, al añadir un módulo nuevo aparece solo en la
+ * pantalla de permisos y no hay forma de olvidarse de él.
+ */
+export interface AppSectionDef {
+  id: string;
+  label: string;
+  always: boolean;
+}
 
 export interface CreateClientDto {
   /** "contador" solo accede a finanzas y facturación */
@@ -116,6 +119,9 @@ export type UpdateClientProfileDto = Partial<Omit<ClientProfile, 'id'>>;
 // ─────────────────────────────────────────────
 
 export const adminApi = {
+  /** Secciones sobre las que se puede dar o quitar acceso (definidas en el servidor) */
+  getSections: () => apiRequest<AppSectionDef[]>('/admin/sections', { method: 'GET' }),
+
   /** Todos los clientes con estadísticas de uso y pagos */
   getClients: () => apiRequest<AdminClient[]>('/admin/clients', { method: 'GET' }),
 

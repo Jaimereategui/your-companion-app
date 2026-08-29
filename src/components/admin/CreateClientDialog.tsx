@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { adminApi, APP_SECTIONS, CreateClientDto } from "@/lib/admin-api";
+import { adminApi, CreateClientDto } from "@/lib/admin-api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,13 +23,12 @@ import {
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, RefreshCw, UserPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useRestrictableSections } from "@/hooks/use-app-sections";
 
 interface CreateClientDialogProps {
   open: boolean;
   onClose: () => void;
 }
-
-const RESTRICTABLE = APP_SECTIONS.filter((s) => !s.always);
 
 /** Contraseña inicial legible pero difícil de adivinar */
 function generatePassword() {
@@ -52,6 +51,7 @@ const EMPTY: CreateClientDto = {
 };
 
 export function CreateClientDialog({ open, onClose }: CreateClientDialogProps) {
+  const { secciones: RESTRICTABLE } = useRestrictableSections();
   const queryClient = useQueryClient();
   const [form, setForm] = useState<CreateClientDto>({ ...EMPTY, password: generatePassword() });
   const [showPassword, setShowPassword] = useState(true);
