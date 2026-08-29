@@ -11,6 +11,13 @@ export interface ProductImage {
 }
 
 export interface Product {
+  /** Datos de envío que exige Falabella. Nulos hasta que se completan. */
+  packageWidth?: number | null;
+  packageLength?: number | null;
+  packageHeight?: number | null;
+  packageWeight?: number | null;
+  /** Ids por canal, incluida la categoría de Falabella. */
+  marketplaceIds?: Record<string, unknown> | null;
   id: string;
   sku: string;
   name: string;

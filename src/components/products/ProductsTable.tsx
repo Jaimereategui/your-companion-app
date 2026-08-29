@@ -2,7 +2,7 @@ import { Product } from "@/lib/products-api";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Edit, ImageOff, Package, Rocket, Sparkles, Trash2 } from "lucide-react";
+import { Edit, ImageOff, Package, Rocket, Sparkles, Trash2, PackageCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProductCard } from "./ProductCard";
 
@@ -14,6 +14,7 @@ interface ProductsTableProps {
   onDelete: (product: Product) => void;
   onRegenerate: (product: Product) => void;
   onPublish: (product: Product) => void;
+  onPrepareFalabella: (product: Product) => void;
 }
 
 export function ProductsTable({
@@ -24,6 +25,7 @@ export function ProductsTable({
   onDelete,
   onRegenerate,
   onPublish,
+  onPrepareFalabella,
 }: ProductsTableProps) {
   // ── Loading skeleton ──────────────────────────────────────────────────────
   if (isLoading) {
@@ -214,6 +216,15 @@ export function ProductsTable({
                         title="Publicar en marketplaces"
                       >
                         <Rocket className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 hover:text-primary hover:bg-primary/10"
+                        onClick={() => onPrepareFalabella(product)}
+                        title="Preparar para Falabella (categoría, medidas y atributos)"
+                      >
+                        <PackageCheck className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="ghost"

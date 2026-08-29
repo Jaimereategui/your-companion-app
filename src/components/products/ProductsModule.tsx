@@ -8,6 +8,7 @@ import { ProductFormDialog } from "./ProductFormDialog";
 import { DeleteProductDialog } from "./DeleteProductDialog";
 import { RegenerateAIDialog } from "./RegenerateAIDialog";
 import { PublishProductDialog } from "./PublishProductDialog";
+import { PrepareFalabellaDialog } from "./PrepareFalabellaDialog";
 import { toast } from "sonner";
 
 const PAGE_SIZE = 10;
@@ -27,6 +28,7 @@ export function ProductsModule() {
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [regenTarget, setRegenTarget]   = useState<Product | null>(null);
   const [publishTarget, setPublishTarget] = useState<Product | null>(null);
+  const [falabellaTarget, setFalabellaTarget] = useState<Product | null>(null);
 
   // ── Query ─────────────────────────────────────────────────────────────────
   const filters: ProductsQueryParams = {
@@ -110,6 +112,7 @@ export function ProductsModule() {
         onDelete={(p) => setDeleteTarget(p)}
         onRegenerate={(p) => setRegenTarget(p)}
         onPublish={(p) => setPublishTarget(p)}
+        onPrepareFalabella={(p) => setFalabellaTarget(p)}
       />
 
       {/* Pagination */}
@@ -146,6 +149,12 @@ export function ProductsModule() {
       />
 
       {/* Publish dialog */}
+      <PrepareFalabellaDialog
+        product={falabellaTarget}
+        open={falabellaTarget !== null}
+        onClose={() => setFalabellaTarget(null)}
+      />
+
       <PublishProductDialog
         product={publishTarget}
         onClose={() => setPublishTarget(null)}

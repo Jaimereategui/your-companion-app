@@ -52,6 +52,22 @@ export interface UpdateInventoryDto {
 // Sync API
 // ─────────────────────────────────────────────
 
+export interface FalabellaField {
+  name: string;
+  label: string;
+  inputType: string;
+  options: string[];
+}
+
+export interface FalabellaPreparation {
+  categoryId: string;
+  packageWidth: number;
+  packageLength: number;
+  packageHeight: number;
+  packageWeight: number;
+  attributes?: Record<string, string>;
+}
+
 export const syncApi = {
   /** Cuentas de marketplaces conectadas del usuario */
   getConnections: () =>
@@ -71,6 +87,24 @@ export const syncApi = {
       method: 'POST',
       body: JSON.stringify({ userId, apiKey }),
     }),
+
+  /** Categorías de Falabella donde se puede publicar, filtradas por texto. */
+  searchFalabellaCategories: (search: string) =>
+    apiRequest<{ id: string; name: string; path: string }[]>(
+      `/sync/falabella/categories?search=${encodeURIComponent(search)}`,
+      { method: 'GET' },
+    ),
+
+  /** Datos obligatorios que hay que pedirle a la persona para esa categoría. */
+  getFalabellaCategoryFields: (categoryId: string) =>
+    apiRequest<FalabellaField[]>(`/sync/falabella/categories/${categoryId}/fields`, { method: 'GET' }),
+
+  /** Guarda categoría, medidas y atributos de un producto para Falabella. */
+  prepareFalabella: (productId: string, payload: FalabellaPreparation) =>
+    apiRequest<{ message: string; listo: boolean; motivo?: string }>(
+      `/sync/falabella/products/${productId}/preparation`,
+      { method: 'PATCH', body: JSON.stringify(payload) },
+    ),
 
   /** URL de autorización OAuth de Mercado Libre */
   getMeliAuthUrl: () =>
