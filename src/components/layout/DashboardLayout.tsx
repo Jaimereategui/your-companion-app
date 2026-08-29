@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Sidebar, isSectionAllowed } from "./Sidebar";
+import { DashboardModule } from "@/components/dashboard/DashboardModule";
 import { Header } from "./Header";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -26,7 +27,7 @@ const pageTitles: Record<string, { title: string; subtitle: string }> = {
   settings:      { title: "Configuración",     subtitle: "Ajustes de tu cuenta y preferencias" },
 };
 
-const IMPLEMENTED = ["ai-products", "products", "marketplaces", "analytics", "admin"];
+const IMPLEMENTED = ["dashboard", "ai-products", "products", "marketplaces", "analytics", "admin"];
 
 // ─── Coming soon placeholder ──────────────────────────────────────────────────
 
@@ -146,6 +147,11 @@ function DashboardContent() {
            * Sections are mounted on first visit, then toggled with
            * display:none — React state is preserved across navigation.
            */}
+          {/* El dashboard es la portada: lo ve cualquier rol. */}
+          <div style={{ display: activeItem === "dashboard" ? "block" : "none" }}>
+            {mounted.has("dashboard") && <DashboardModule />}
+          </div>
+
           {canSee("ai-products") && (
             <div style={{ display: activeItem === "ai-products" ? "block" : "none" }}>
               {mounted.has("ai-products") && <AIProductsModule />}
