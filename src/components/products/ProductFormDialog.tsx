@@ -269,7 +269,13 @@ export function ProductFormDialog({
         </DialogHeader>
 
         {/* ── Scrollable body ───────────────────────────────────────────────── */}
-        <ScrollArea className="flex-1 px-6">
+        {/*
+          min-h-0 es imprescindible: sin él, un hijo flexible no puede
+          encogerse por debajo de su contenido, así que esta zona crecía
+          hasta caber entera, nunca aparecía la barra de desplazamiento y
+          los últimos campos quedaban fuera de la pantalla.
+        */}
+        <ScrollArea className="flex-1 min-h-0 px-6">
           <div className="space-y-5 py-5">
             {/* Name */}
             <div className="space-y-2">

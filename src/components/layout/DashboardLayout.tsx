@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Sidebar, isSectionAllowed } from "./Sidebar";
 import { DashboardModule } from "@/components/dashboard/DashboardModule";
+import { CrmModule } from "@/components/crm/CrmModule";
 import { Header } from "./Header";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -21,13 +22,14 @@ const pageTitles: Record<string, { title: string; subtitle: string }> = {
   products:      { title: "Productos",         subtitle: "Gestiona tu catálogo de productos" },
   "ai-products": { title: "IA para Productos", subtitle: "Optimiza tus productos con inteligencia artificial" },
   marketplaces:  { title: "Marketplaces",      subtitle: "Conecta y sincroniza tus canales de venta" },
+  crm:           { title: "CRM",                subtitle: "Tus prospectos y en qué etapa está cada uno" },
   analytics:     { title: "Analíticas",        subtitle: "Tus ventas y el rendimiento de tus canales" },
   admin:         { title: "Superadmin",        subtitle: "Clientes, pagos y control financiero" },
   // El contador ve la misma sección con otro encabezado
   settings:      { title: "Configuración",     subtitle: "Ajustes de tu cuenta y preferencias" },
 };
 
-const IMPLEMENTED = ["dashboard", "ai-products", "products", "marketplaces", "analytics", "admin"];
+const IMPLEMENTED = ["dashboard", "ai-products", "products", "marketplaces", "analytics", "crm", "admin"];
 
 // ─── Coming soon placeholder ──────────────────────────────────────────────────
 
@@ -167,6 +169,12 @@ function DashboardContent() {
           {canSee("marketplaces") && (
             <div style={{ display: activeItem === "marketplaces" ? "block" : "none" }}>
               {mounted.has("marketplaces") && <MarketplacesModule />}
+            </div>
+          )}
+
+          {canSee("crm") && (
+            <div style={{ display: activeItem === "crm" ? "block" : "none" }}>
+              {mounted.has("crm") && <CrmModule />}
             </div>
           )}
 

@@ -11,8 +11,7 @@ import {
   Wallet,
   ChevronLeft,
   ChevronRight,
-  X
-} from "lucide-react";
+  X, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -48,6 +47,7 @@ const navItems: NavItem[] = [
   { icon: Sparkles, label: "IA Productos", id: "ai-products", badge: "Nuevo" },
   { icon: Store, label: "Marketplaces", id: "marketplaces" },
   { icon: BarChart3, label: "Analíticas", id: "analytics" },
+  { icon: Users, label: "CRM", id: "crm" },
   { icon: ShieldCheck, label: "Superadmin", id: "admin", adminOnly: true },
   { icon: Settings, label: "Configuración", id: "settings" },
 ];
