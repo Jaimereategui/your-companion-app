@@ -16,13 +16,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Edit, FileWarning, ImagePlus, Loader2, Save, Sparkles, X } from "lucide-react";
+import {
+  AlertCircle, Edit, FileWarning, ImagePlus, Loader2, Save, Sparkles, X } from "lucide-react";
 import { Product, productsApi } from "@/lib/products-api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -183,11 +183,20 @@ export function ProductFormDialog({
     }
   };
 
-  const canSubmit =
-    !isSubmitting &&
-    name.trim() !== "" &&
-    description.trim() !== "" &&
-    (isEdit || (sku.trim() !== "" && images.length > 0));
+  /**
+   * Qué falta para poder enviar.
+   *
+   * Antes el botón simplemente se quedaba apagado y no decía por qué: la
+   * zona de imágenes está al final del formulario, así que quien rellenaba
+   * lo visible daba por hecho que el botón estaba roto.
+   */
+  const faltantes: string[] = [];
+  if (name.trim() === "") faltantes.push("el nombre");
+  if (description.trim() === "") faltantes.push("la descripción");
+  if (!isEdit && sku.trim() === "") faltantes.push("el SKU");
+  if (!isEdit && images.length === 0) faltantes.push("al menos una imagen");
+
+  const canSubmit = !isSubmitting && faltantes.length === 0;
 
   // ── Dirty detection ───────────────────────────────────────────────────────
   const formIsDirty = isEdit
@@ -270,12 +279,20 @@ export function ProductFormDialog({
 
         {/* ── Scrollable body ───────────────────────────────────────────────── */}
         {/*
-          min-h-0 es imprescindible: sin él, un hijo flexible no puede
-          encogerse por debajo de su contenido, así que esta zona crecía
-          hasta caber entera, nunca aparecía la barra de desplazamiento y
-          los últimos campos quedaban fuera de la pantalla.
+          Zona desplazable del formulario.
+
+          Lleva DOS límites a propósito. `flex-1 min-h-0` es lo correcto en
+          teoría —un hijo flexible no puede encogerse por debajo de su
+          contenido sin min-h-0—, pero por sí solo no bastó en el navegador
+          real. El `max-h` explícito no depende de cómo el navegador resuelva
+          la altura del contenedor: reserva sitio para la cabecera y el pie y
+          obliga a que lo demás se desplace, pase lo que pase.
+
+          Es un div normal y no un ScrollArea de la librería porque este
+          muestra la barra nativa del sistema: se ve, se agarra con el ratón y
+          no depende de que el componente calcule bien su altura interna.
         */}
-        <ScrollArea className="flex-1 min-h-0 px-6">
+        <div className="flex-1 min-h-0 max-h-[calc(92vh-11rem)] overflow-y-auto px-6">
           <div className="space-y-5 py-5">
             {/* Name */}
             <div className="space-y-2">
@@ -506,10 +523,22 @@ export function ProductFormDialog({
               </>
             )}
           </div>
-        </ScrollArea>
+        </div>
 
         {/* ── Footer ───────────────────────────────────────────────────────── */}
-        <DialogFooter className="px-6 py-4 border-t border-border shrink-0">
+        <DialogFooter className="px-6 py-4 border-t border-border shrink-0 sm:justify-between gap-3">
+          {faltantes.length > 0 ? (
+            <p className="text-xs text-muted-foreground flex items-center gap-1.5 order-last sm:order-first">
+              <AlertCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              <span>
+                Falta {faltantes.join(", ").replace(/,([^,]*)$/, " y$1")} para continuar.
+              </span>
+            </p>
+          ) : (
+            <span />
+          )}
+
+          <div className="flex gap-2">
           <Button
             variant="ghost"
             onClick={handleCloseAttempt}
@@ -540,6 +569,7 @@ export function ProductFormDialog({
               </>
             )}
           </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
